@@ -21,7 +21,8 @@
     "lint": "eslint src",
     "watch": "tsc --watch",
     "type-check": "tsc --noEmit",
-    "prepare": "pnpm build",
+    "prepare": "husky install",
+    "postinstall": "if [ -d .husky/_ ]; then mv .husky/_/* .husky/ && rm -rf .husky/_; fi",
     "pack:check": "npm pack && tar -tf *.tgz"
   },
   "dependencies": {
