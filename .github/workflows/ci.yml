@@ -30,38 +30,29 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'pnpm'
 
-      # Step 3: Install PNPM manually
+      # Step 3: Install PNPM
       - name: Install PNPM
-        run: |
-          npm install -g pnpm
-          pnpm setup
-          echo "PNPM_HOME=$(pnpm config get store-dir)" >> $GITHUB_ENV
-          echo "PATH=$PNPM_HOME:$PATH" >> $GITHUB_ENV
-          source $GITHUB_ENV
+        run: npm install -g pnpm
 
-      # Step 4: Verify PNPM installation
-      - name: Verify PNPM installation
-        run: pnpm --version
-
-      # Step 5: Install dependencies
+      # Step 4: Install dependencies with lockfile
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      # Step 6: Run Linting
+      # Step 5: Run Linting
       - name: Lint code
         run: pnpm lint
 
-      # Step 7: Run Unit Tests
+      # Step 6: Run Unit Tests
       - name: Run tests
         run: pnpm test
 
-      # Step 8: Generate Coverage Report
+      # Step 7: Generate Coverage Report
       - name: Generate coverage report
         run: pnpm test:coverage
 
-      # Step 9: Upload Coverage to Codecov
+      # Step 8: Upload Coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -84,28 +75,19 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Install PNPM manually
+      # Step 3: Install PNPM
       - name: Install PNPM
-        run: |
-          npm install -g pnpm
-          pnpm setup
-          echo "PNPM_HOME=$(pnpm config get store-dir)" >> $GITHUB_ENV
-          echo "PATH=$PNPM_HOME:$PATH" >> $GITHUB_ENV
-          source $GITHUB_ENV
+        run: npm install -g pnpm
 
-      # Step 4: Verify PNPM installation
-      - name: Verify PNPM installation
-        run: pnpm --version
-
-      # Step 5: Install dependencies
+      # Step 4: Install dependencies with lockfile
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      # Step 6: Build the package
+      # Step 5: Build the package
       - name: Build package
         run: pnpm build
 
-      # Step 7: Publish with Semantic Release
+      # Step 6: Publish with Semantic Release
       - name: Release with Semantic Release
         run: npx semantic-release
         env:
