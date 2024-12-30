@@ -1,0 +1,106 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'feature/**'
+      - 'fix/**'
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20] # Versions stables et maintenues de Node.js
+
+    steps:
+      # Étape 1 : Récupérer le code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Configurer Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # Étape 3 : Installer pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8 # Spécifiez la version de pnpm que vous souhaitez installer
+
+      # Étape 4 : Vérifier l'installation de pnpm
+      - name: Verify pnpm installation
+        run: pnpm --version
+
+      # Étape 5 : Installer les dépendances
+      - name: Install dependencies
+        run: pnpm install
+
+      # Étape 6 : Lancer le linting
+      - name: Lint code
+        run: pnpm lint
+
+      # Étape 7 : Exécuter les tests unitaires
+      - name: Run tests
+        run: pnpm test
+
+      # Étape 8 : Générer le rapport de couverture
+      - name: Generate coverage report
+        run: pnpm test:coverage
+
+      # Étape 9 : Télécharger la couverture vers Codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          name: codecov-umbrella
+
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      # Étape 1 : Récupérer le code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Configurer Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      # Étape 3 : Installer pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8 # Spécifiez la version de pnpm que vous souhaitez installer
+
+      # Étape 4 : Vérifier l'installation de pnpm
+      - name: Verify pnpm installation
+        run: pnpm --version
+
+      # Étape 5 : Installer les dépendances
+      - name: Install dependencies
+        run: pnpm install
+
+      # Étape 6 : Construire le package
+      - name: Build package
+        run: pnpm build
+
+      # Étape 7 : Publier avec Semantic Release
+      - name: Release with Semantic Release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
