@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/organization-ai-projects/shared-base/compare/v1.1.0...v1.1.1) (2024-12-30)
+
+
+### Bug Fixes
+
+* resolve merge conflict and normalize line endings to LF ([d20246a](https://github.com/organization-ai-projects/shared-base/commit/d20246a7334ff9abb858d53096617d089d890100))
+
 # [1.1.0](https://github.com/organization-ai-projects/shared-base/compare/v1.0.0...v1.1.0) (2024-12-30)
 
 
