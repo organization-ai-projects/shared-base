@@ -25,18 +25,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: pnpm # Cache dependencies for faster builds
-
-      # Step 3: Install pnpm
+      # Step 2: Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8 # Specify the pnpm version
+
+      # Step 3: Set up Node.js and cache
+      - name: Set up Node.js and cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm' # Enable caching for pnpm
 
       # Step 4: Install dependencies
       - name: Install dependencies
@@ -71,18 +71,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          cache: pnpm
-
-      # Step 3: Install pnpm
+      # Step 2: Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      # Step 3: Set up Node.js and cache
+      - name: Set up Node.js and cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
 
       # Step 4: Install dependencies
       - name: Install dependencies
