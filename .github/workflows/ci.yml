@@ -63,38 +63,29 @@ jobs:
           name: codecov-umbrella
 
   release:
+    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      packages: write
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
-
-      # Step 2: Install pnpm
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
         with:
-          version: 8
+          fetch-depth: 0
 
-      # Step 3: Set up Node.js and cache
-      - name: Set up Node.js and cache
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'pnpm'
 
-      # Step 4: Install dependencies
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
-      # Step 5: Build the package
-      - name: Build package
-        run: pnpm build
-
-      # Step 6: Release with Semantic Release
-      - name: Release with Semantic Release
-        run: npx semantic-release --extends ./release.config.mjs
+      - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token (automatic)
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # NPM token (manual, must be configured in secrets)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release --extends ./release.config.mjs
