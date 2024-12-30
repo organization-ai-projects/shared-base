@@ -35,8 +35,8 @@ jobs:
       - name: Install PNPM manually
         run: |
           curl -fsSL https://get.pnpm.io/install.sh | env SHELL=/bin/bash sh -
-          echo "::add-path::$HOME/.local/share/pnpm"
-          echo "::add-path::$HOME/.local/share/pnpm/global/bin"
+          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
+          echo "PATH=$HOME/.local/share/pnpm:$HOME/.local/share/pnpm/global/bin:$PATH" >> $GITHUB_ENV
 
       # Step 4: Verify PNPM installation
       - name: Verify PNPM installation
@@ -85,8 +85,8 @@ jobs:
       - name: Install PNPM manually
         run: |
           curl -fsSL https://get.pnpm.io/install.sh | env SHELL=/bin/bash sh -
-          echo "::add-path::$HOME/.local/share/pnpm"
-          echo "::add-path::$HOME/.local/share/pnpm/global/bin"
+          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
+          echo "PATH=$HOME/.local/share/pnpm:$HOME/.local/share/pnpm/global/bin:$PATH" >> $GITHUB_ENV
 
       # Step 4: Verify PNPM installation
       - name: Verify PNPM installation
