@@ -18,46 +18,43 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18, 20] # Versions stables et maintenues de Node.js
+        node-version: [18, 20] # Test with supported Node.js LTS versions
 
     steps:
-      # Étape 1 : Récupérer le code
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Étape 2 : Configurer Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      # Étape 3 : Installer pnpm
+      # Step 2: Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8 # Spécifiez la version de pnpm que vous souhaitez installer
+          version: 8 # Specify the pnpm version
 
-      # Étape 4 : Vérifier l'installation de pnpm
-      - name: Verify pnpm installation
-        run: pnpm --version
+      # Step 3: Set up Node.js and cache
+      - name: Set up Node.js and cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm' # Enable caching for pnpm
 
-      # Étape 5 : Installer les dépendances
+      # Step 4: Install dependencies
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      # Étape 6 : Lancer le linting
+      # Step 5: Run linting
       - name: Lint code
         run: pnpm lint
 
-      # Étape 7 : Exécuter les tests unitaires
+      # Step 6: Run unit tests
       - name: Run tests
         run: pnpm test
 
-      # Étape 8 : Générer le rapport de couverture
+      # Step 7: Generate test coverage
       - name: Generate coverage report
         run: pnpm test:coverage
 
-      # Étape 9 : Télécharger la couverture vers Codecov
+      # Step 8: Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -70,37 +67,34 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      # Étape 1 : Récupérer le code
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Étape 2 : Configurer Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
-      # Étape 3 : Installer pnpm
+      # Step 2: Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8 # Spécifiez la version de pnpm que vous souhaitez installer
+          version: 8
 
-      # Étape 4 : Vérifier l'installation de pnpm
-      - name: Verify pnpm installation
-        run: pnpm --version
+      # Step 3: Set up Node.js and cache
+      - name: Set up Node.js and cache
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
 
-      # Étape 5 : Installer les dépendances
+      # Step 4: Install dependencies
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      # Étape 6 : Construire le package
+      # Step 5: Build the package
       - name: Build package
         run: pnpm build
 
-      # Étape 7 : Publier avec Semantic Release
+      # Step 6: Release with Semantic Release
       - name: Release with Semantic Release
-        run: npx semantic-release
+        run: npx semantic-release --extends ./release.config.mjs
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token (automatic)
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # NPM token (manual, must be configured in secrets)
