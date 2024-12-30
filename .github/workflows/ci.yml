@@ -31,10 +31,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Step 3: Install PNPM
-      - name: Install PNPM
+      # Step 3: Install PNPM manually
+      - name: Install PNPM manually
         run: |
-          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          curl -fsSL https://get.pnpm.io/install.sh | env SHELL=/bin/bash sh -
           echo "::add-path::$HOME/.local/share/pnpm"
           echo "::add-path::$HOME/.local/share/pnpm/global/bin"
 
@@ -81,10 +81,10 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Install PNPM
-      - name: Install PNPM
+      # Step 3: Install PNPM manually
+      - name: Install PNPM manually
         run: |
-          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          curl -fsSL https://get.pnpm.io/install.sh | env SHELL=/bin/bash sh -
           echo "::add-path::$HOME/.local/share/pnpm"
           echo "::add-path::$HOME/.local/share/pnpm/global/bin"
 
