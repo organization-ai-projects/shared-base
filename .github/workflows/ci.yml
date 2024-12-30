@@ -18,47 +18,42 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [18, 20] # Supported Node.js versions for testing
 
     steps:
-      # Step 1: Check out the code
+      # Step 1: Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      # Step 3: Install PNPM manually
-      - name: Install PNPM manually
-        run: |
-          curl -fsSL https://get.pnpm.io/install.sh | env SHELL=/bin/bash sh -
-          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
-          echo "PATH=$HOME/.local/share/pnpm:$HOME/.local/share/pnpm/global/bin:$PATH" >> $GITHUB_ENV
+      # Step 3: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8 # Specify the pnpm version to use
 
-      # Step 4: Verify PNPM installation
-      - name: Verify PNPM installation
-        run: pnpm --version
-
-      # Step 5: Install dependencies
+      # Step 4: Install project dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Step 6: Run Linting
+      # Step 5: Perform linting on the code
       - name: Lint code
         run: pnpm lint
 
-      # Step 7: Run Unit Tests
+      # Step 6: Run unit tests
       - name: Run tests
         run: pnpm test
 
-      # Step 8: Generate Coverage Report
+      # Step 7: Generate coverage report
       - name: Generate coverage report
         run: pnpm test:coverage
 
-      # Step 9: Upload Coverage to Codecov
+      # Step 8: Upload coverage report to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -68,41 +63,36 @@ jobs:
 
   release:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' # Trigger release only for the main branch
 
     steps:
-      # Step 1: Check out the code
+      # Step 1: Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
+      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # Step 3: Install PNPM manually
-      - name: Install PNPM manually
-        run: |
-          curl -fsSL https://get.pnpm.io/install.sh | env SHELL=/bin/bash sh -
-          echo "PNPM_HOME=$HOME/.local/share/pnpm" >> $GITHUB_ENV
-          echo "PATH=$HOME/.local/share/pnpm:$HOME/.local/share/pnpm/global/bin:$PATH" >> $GITHUB_ENV
+      # Step 3: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8 # Specify the pnpm version to use
 
-      # Step 4: Verify PNPM installation
-      - name: Verify PNPM installation
-        run: pnpm --version
-
-      # Step 5: Install dependencies
+      # Step 4: Install project dependencies
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Step 6: Build the package
+      # Step 5: Build the package for release
       - name: Build package
         run: pnpm build
 
-      # Step 7: Publish with Semantic Release
+      # Step 6: Publish the package using Semantic Release
       - name: Release with Semantic Release
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub token for Semantic Release
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }} # NPM token for publishing
