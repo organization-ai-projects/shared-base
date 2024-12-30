@@ -1,11 +1,15 @@
-# [1.2.0](https://github.com/organization-ai-projects/shared-base/compare/v1.1.1...v1.2.0) (2024-12-30)
+# [1.3.0-random-utils.1](https://github.com/organization-ai-projects/shared-base/compare/v1.2.0...v1.3.0-random-utils.1) (2024-12-30)
 
 
 ### Features
 
-* add utilities for managing environment variables ([74b1682](https://github.com/organization-ai-projects/shared-base/commit/74b1682806bd85f64b93292be0af4c72b0d23e8d))
+* add random utilities for strings, numbers, and UUIDs ([cdeca62](https://github.com/organization-ai-projects/shared-base/commit/cdeca6283c7e4361906521b15d91269bc8aded07))
 
-# [1.2.0-env-utils.1](https://github.com/organization-ai-projects/shared-base/compare/v1.1.0...v1.2.0-env-utils.1) (2024-12-30)
+### Features
+
+# [1.2.0](https://github.com/organization-ai-projects/shared-base/compare/v1.1.1...v1.2.0) (2024-12-30)
+
+* add utilities for managing environment variables ([74b1682](https://github.com/organization-ai-projects/shared-base/commit/74b1682806bd85f64b93292be0af4c72b0d23e8d))
 
 
 ### Bug Fixes
