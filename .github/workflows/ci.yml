@@ -32,9 +32,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      # Step 3: Install PNPM directly via NPM
-      - name: Install PNPM globally
-        run: npm install -g pnpm
+      # Step 3: Install PNPM manually
+      - name: Install PNPM manually
+        run: |
+          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          export PATH="$HOME/.local/share/pnpm:$PATH"
 
       # Step 4: Verify PNPM installation
       - name: Verify PNPM installation
@@ -79,9 +81,11 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Install PNPM directly via NPM
-      - name: Install PNPM globally
-        run: npm install -g pnpm
+      # Step 3: Install PNPM manually
+      - name: Install PNPM manually
+        run: |
+          curl -fsSL https://get.pnpm.io/install.sh | sh -
+          export PATH="$HOME/.local/share/pnpm:$PATH"
 
       # Step 4: Verify PNPM installation
       - name: Verify PNPM installation
