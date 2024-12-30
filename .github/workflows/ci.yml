@@ -32,11 +32,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      # Step 3: Ensure PNPM is installed
+      # Step 3: Install PNPM directly via NPM
       - name: Install PNPM globally
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+        run: npm install -g pnpm
 
       # Step 4: Verify PNPM installation
       - name: Verify PNPM installation
@@ -81,11 +79,9 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Ensure PNPM is installed
+      # Step 3: Install PNPM directly via NPM
       - name: Install PNPM globally
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+        run: npm install -g pnpm
 
       # Step 4: Verify PNPM installation
       - name: Verify PNPM installation
