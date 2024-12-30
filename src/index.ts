@@ -4,9 +4,11 @@ export * from './utils/error';
 export * from './utils/logger';
 export * from './utils/objectUtils';
 export * from './utils/stringUtils';
+export * from './utils/arrayUtils';
+export * from './utils/envUtils';
 
-// Export des constantes
 export * from './constants';
 
-// Export des types
 export { DeepPartial as TypesDeepPartial } from './types';
+
+export * from './tests/mocks/MockLogger';
