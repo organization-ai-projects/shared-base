@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/organization-ai-projects/shared-base/compare/v1.0.0...v1.1.0) (2024-12-30)
+
+
+### Features
+
+* add TypeScript utility functions for array operations ([15894f8](https://github.com/organization-ai-projects/shared-base/commit/15894f84366aabb5cb95900f1577e164986aac9b))
+
 # 1.0.0 (2024-12-30)
 
 
