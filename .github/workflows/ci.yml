@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16, 18, 20]
+        node-version: [18, 20] # Versions stables et maintenues de Node.js
 
     steps:
       # Step 1: Check out the code
@@ -32,9 +32,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
-      # Step 3: Install PNPM
+      # Step 3: Install PNPM globally
       - name: Install PNPM
-        run: corepack enable && corepack prepare pnpm@latest --activate
+        run: npm install -g pnpm
 
       # Step 4: Install dependencies
       - name: Install dependencies
@@ -48,7 +48,11 @@ jobs:
       - name: Run tests
         run: pnpm test
 
-      # Step 7: Upload Coverage to Codecov
+      # Step 7: Generate Coverage Report
+      - name: Generate coverage report
+        run: pnpm test:coverage
+
+      # Step 8: Upload Coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -71,15 +75,19 @@ jobs:
         with:
           node-version: '20'
 
-      # Step 3: Install dependencies
+      # Step 3: Install PNPM globally
+      - name: Install PNPM
+        run: npm install -g pnpm
+
+      # Step 4: Install dependencies
       - name: Install dependencies
         run: pnpm install
 
-      # Step 4: Build the package
+      # Step 5: Build the package
       - name: Build package
         run: pnpm build
 
-      # Step 5: Publish with Semantic Release
+      # Step 6: Publish with Semantic Release
       - name: Release with Semantic Release
         run: npx semantic-release
         env:
