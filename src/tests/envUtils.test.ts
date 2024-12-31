@@ -1,20 +1,50 @@
 // Tests for envUtils
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { getEnv, requireEnv } from '../utils/envUtils';
 
-describe('envUtils', () => {
-  it('should return the default value if the variable is not defined', () => {
-    expect(getEnv('UNDEFINED_VAR', 'default')).toBe('default');
+describe('EnvUtils', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
   });
 
-  it('should return the value of a defined variable', () => {
-    process.env.TEST_VAR = 'test-value';
-    expect(getEnv('TEST_VAR')).toBe('test-value');
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
-  it('should throw an error if a required variable is not defined', () => {
-    expect(() => requireEnv('UNDEFINED_VAR')).toThrowError(
-      'Environment variable "UNDEFINED_VAR" is required but not defined.',
-    );
+  describe('getEnv', () => {
+    it("devrait retourner la valeur de la variable d'environnement", () => {
+      process.env.TEST_VAR = 'test-value';
+      expect(getEnv('TEST_VAR')).toBe('test-value');
+    });
+
+    it("devrait retourner la valeur par défaut si la variable n'existe pas", () => {
+      expect(getEnv('NONEXISTENT_VAR', 'default')).toBe('default');
+    });
+
+    it('devrait retourner une chaîne vide si pas de valeur par défaut', () => {
+      expect(getEnv('NONEXISTENT_VAR')).toBe('');
+    });
+  });
+
+  describe('requireEnv', () => {
+    it('devrait retourner la valeur si la variable existe', () => {
+      process.env.REQUIRED_VAR = 'required-value';
+      expect(requireEnv('REQUIRED_VAR')).toBe('required-value');
+    });
+
+    it("devrait lancer une erreur si la variable n'existe pas", () => {
+      expect(() => requireEnv('NONEXISTENT_VAR')).toThrow(
+        'Environment variable "NONEXISTENT_VAR" is required but not defined.',
+      );
+    });
+
+    it('devrait lancer une erreur si la variable est vide', () => {
+      process.env.EMPTY_VAR = '';
+      expect(() => requireEnv('EMPTY_VAR')).toThrow(
+        'Environment variable "EMPTY_VAR" is required but not defined.',
+      );
+    });
   });
 });

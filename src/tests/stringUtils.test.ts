@@ -2,16 +2,32 @@ import { describe, it, expect } from 'vitest';
 import { capitalize, slugify, snakeToCamel } from '../utils/stringUtils';
 
 describe('StringUtils', () => {
-  it('should capitalize the first letter of a string', () => {
-    expect(capitalize('hello')).toBe('Hello');
-  });
+  describe('capitalize', () => {
+    it('devrait capitaliser la première lettre', () => {
+      expect(capitalize('hello')).toBe('Hello');
+      expect(capitalize('world')).toBe('World');
+    });
 
-  it('should return an empty string if input is empty', () => {
-    expect(capitalize('')).toBe('');
-  });
+    it('devrait retourner une chaîne vide si l\'entrée est vide', () => {
+      expect(capitalize('')).toBe('');
+    });
 
-  it('should handle strings with leading spaces', () => {
-    expect(capitalize('  hello')).toBe('  Hello');
+    it('devrait préserver les espaces en début de chaîne', () => {
+      expect(capitalize('  hello')).toBe('  Hello');
+      expect(capitalize('\t\ttest')).toBe('\t\tTest');
+    });
+
+    it('devrait retourner la chaîne inchangée si elle ne commence pas par une lettre', () => {
+      expect(capitalize('123test')).toBe('123test');
+      expect(capitalize('!hello')).toBe('!hello');
+      expect(capitalize('@world')).toBe('@world');
+    });
+
+    it('devrait préserver les chaînes sans lettres', () => {
+      expect(capitalize('   ')).toBe('   ');
+      expect(capitalize('###')).toBe('###');
+      expect(capitalize('123')).toBe('123');
+    });
   });
 
   it('should remove special characters', () => {

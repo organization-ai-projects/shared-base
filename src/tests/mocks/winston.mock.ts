@@ -7,11 +7,11 @@ export const mockLogger = {
 };
 
 const mockWinston = {
-  createLogger: (): typeof mockLogger => mockLogger,
+  createLogger: vi.fn(() => mockLogger),
   format: {
-    combine: vi.fn(),
-    timestamp: vi.fn(),
-    printf: vi.fn(),
+    combine: vi.fn(() => ({})),
+    timestamp: vi.fn(() => ({})),
+    printf: vi.fn(() => ({})),
   },
   transports: {
     Console: vi.fn(),
@@ -19,6 +19,9 @@ const mockWinston = {
   },
 };
 
-vi.mock('winston', () => mockWinston);
+vi.mock('winston', () => ({
+  default: mockWinston,
+  ...mockWinston,
+}));
 
 export default mockWinston;

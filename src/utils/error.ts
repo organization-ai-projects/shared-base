@@ -12,11 +12,7 @@ export class CustomError extends Error {
   ) {
     super(message);
     this.name = 'CustomError';
-
-    // Maintenir la trace de l'erreur pour faciliter le débogage
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, CustomError);
-    }
+    Error.captureStackTrace(this, this.constructor);
   }
 }
 
@@ -26,10 +22,7 @@ export class CustomError extends Error {
  *
  * @param error - The error to log
  */
-export function handleError(error: unknown): void {
-  if (error instanceof Error) {
-    console.error(`[Error]: ${error.message}`);
-  } else {
-    console.error(`[Unknown Error]: ${String(error)}`);
-  }
+export function handleError(error: Error | CustomError): void {
+  const prefix = error instanceof CustomError ? `[${error.code}]` : '[Error]';
+  console.error(`${prefix}: ${error.message}`);
 }

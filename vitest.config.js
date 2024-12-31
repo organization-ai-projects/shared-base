@@ -2,19 +2,27 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    globals: true,
-    environment: 'node',
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
       reportsDirectory: './coverage',
+      all: true,
+      include: ['src/**/*.ts'],
       exclude: [
+        'node_modules/**',
+        'dist/**',
         '**/types/**',
         '**/interfaces/**',
-        '**/*.config.js',
-        '**/tests/mocks/**',
-        '**/tests/**',
+        '**/generateIndex.ts',
+        '**/release.config.mjs',
+        '**/tests/**', // Exclure tous les fichiers de tests, y compris les mocks
       ],
+      reporter: ['text', 'html', 'json'],
+      threshold: {
+        statements: 80,
+        branches: 80,
+        functions: 80,
+        lines: 80,
+      },
     },
   },
 });
