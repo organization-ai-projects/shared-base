@@ -31,6 +31,10 @@ vi.mock('winston', () => mockWinston);
 
 import { WinstonLogger } from '../utils/logger';
 
+interface CircularObject {
+  self?: CircularObject;
+}
+
 describe('Logger', () => {
   let logger: ILogger;
   let mockLoggerInstance: { info: any; error: any; warn: any; };
@@ -288,7 +292,7 @@ describe('Logger', () => {
 
     it('devrait gérer les erreurs de formatage des objets circulaires', () => {
       const erreurCirculaire = new Error('Erreur de sérialisation JSON');
-      const circularRef: any = {};
+      const circularRef: CircularObject = {};
       circularRef.self = circularRef;
       
       logger.info(circularRef);

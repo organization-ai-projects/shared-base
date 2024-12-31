@@ -5,7 +5,7 @@ import {
   isValidDate,
   addDays,
   subtractDays,
-  formatDateAdvanced
+  formatDateAdvanced,
 } from '../../utils/dates/advancedDateUtils';
 
 describe('Advanced Date Utilities', () => {

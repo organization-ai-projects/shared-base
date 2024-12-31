@@ -18,13 +18,15 @@
     "build": "npm run generate-index && tsc",
     "test": "vitest run",
     "test:coverage": "vitest --coverage",
-    "lint": "eslint src",
+    "lint": "eslint src --fix",
     "watch": "tsc --watch",
     "type-check": "tsc --noEmit",
     "postinstall": "node -e \"if (process.platform === 'win32') { require('child_process').execSync('if exist .husky\\\\_ (move .husky\\\\_\\\\* .husky\\\\ && rmdir .husky\\\\_)') }\"",
     "pack:check": "npm pack && tar -tf *.tgz",
     "check:outdated": "pnpm outdated",
-    "generate-index": "ts-node --esm generateIndex.ts"
+    "generate-index": "ts-node --esm generateIndex.ts",
+    "format": "prettier --write .",
+    "lint:staged": "lint-staged"
   },
   "dependencies": {
     "dayjs": "^1.11.13",
