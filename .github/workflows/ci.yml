@@ -16,19 +16,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18, 20] # Test with supported Node.js LTS versions
 
     steps:
       # Step 1: Checkout the code
       - uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js and cache
+      # Step 2: Set up Node.js (Only Node 20 here)
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20'
           cache: 'pnpm' # Enable caching for pnpm
 
       # Step 3: Install dependencies
