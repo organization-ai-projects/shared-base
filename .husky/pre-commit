@@ -9,7 +9,7 @@ echo "🎨 Formatting..."
 pnpm format || exit 1
 
 echo "🔍 Linting..."
-pnpm lint --fix || exit 1
+pnpm lint || exit 1
 
 echo "🧪 Testing..."
 pnpm test || exit 1
