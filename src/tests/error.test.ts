@@ -1,37 +1,36 @@
-import { describe, it, expect, vi, afterEach, afterAll } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { CustomError, handleError } from '../utils/error';
 
 describe('CustomError', () => {
-  it('should create an error with a code and message', () => {
+  it('devrait créer une erreur avec un code et un message', () => {
     const error = new CustomError('ERR_CODE', 'An error occurred');
     expect(error.code).toBe('ERR_CODE');
     expect(error.message).toBe('An error occurred');
     expect(error.name).toBe('CustomError');
   });
 
-  it('should capture stack trace for debugging', () => {
+  it('devrait capturer la stack trace pour le débogage', () => {
     const error = new CustomError('ERR_CODE', 'An error occurred');
     expect(error.stack).toBeDefined();
   });
 });
 
 describe('handleError', () => {
-  const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation((_message) => {
-    // Implémentation de mock pour console.error
-    // Mocked console.error: ${message}
-  });
+  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
   afterEach(() => {
-    consoleErrorMock.mockClear();
+    consoleErrorSpy.mockClear();
   });
 
-  afterAll(() => {
-    consoleErrorMock.mockRestore();
-  });
-
-  it('should log the error message', () => {
+  it("devrait logger le message d'erreur avec le code pour CustomError", () => {
     const error = new CustomError('ERR_CODE', 'An error occurred');
     handleError(error);
-    expect(consoleErrorMock).toHaveBeenCalledWith('[Error]: An error occurred');
+    expect(consoleErrorSpy).toHaveBeenCalledWith('[ERR_CODE]: An error occurred');
+  });
+
+  it("devrait logger le message d'erreur standard pour Error", () => {
+    const error = new Error('Standard error');
+    handleError(error);
+    expect(consoleErrorSpy).toHaveBeenCalledWith('[Error]: Standard error');
   });
 });

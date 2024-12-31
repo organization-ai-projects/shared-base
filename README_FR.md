@@ -95,4 +95,3 @@ Si vous rencontrez des problèmes ou avez des suggestions, n'hésitez pas à ouv
 ## 🌐 Autres Langues
 
 Ce fichier est également disponible en anglais : [README.en.md](README.en.md).
-

@@ -1,17 +1,20 @@
-import typescriptParser from '@typescript-eslint/parser';
 import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import typescriptParser from '@typescript-eslint/parser';
+import { defineConfig } from 'eslint-define-config';
 import prettierPlugin from 'eslint-plugin-prettier';
 
-export default [
+export default defineConfig([
   {
-    ignores: ['node_modules/**', 'dist/**', '*.config.js', '*.test.ts', 'coverage/**'],
+    ignores: ['node_modules/**', 'dist/**', 'coverage/**'],
   },
   {
-    files: ['**/*.ts'],
+    files: ['**/*.ts', '**/*.tsx', '**/*.test.ts', '**/*.test.tsx'],
     languageOptions: {
       parser: typescriptParser,
-      ecmaVersion: 2022,
-      sourceType: 'module',
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+      },
     },
     plugins: {
       '@typescript-eslint': typescriptPlugin,
@@ -26,4 +29,4 @@ export default [
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
-];
+]);

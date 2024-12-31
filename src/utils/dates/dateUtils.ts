@@ -1,3 +1,10 @@
+import dayjs from 'dayjs';
+import 'dayjs/locale/fr';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
+dayjs.locale('fr');
+
 /**
  * Formats a given date into a localized string representation.
  *
@@ -7,7 +14,6 @@
  * @returns A string representing the formatted date according to the specified locale and options.
  * @throws Will throw an error if the provided date is invalid.
  */
-
 export function formatDate(
   date: Date | string,
   locale = 'fr-FR',
@@ -21,6 +27,5 @@ export function formatDate(
   if (isNaN(parsedDate.getTime())) {
     throw new Error('Invalid date provided.');
   }
-
   return parsedDate.toLocaleDateString(locale, options);
 }
