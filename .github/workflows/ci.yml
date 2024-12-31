@@ -40,7 +40,11 @@ jobs:
 
       # Step 4: Install dependencies
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ "${{ matrix.node-version }}" = "18" ]; then
+            export NODE_NO_WARNINGS=1
+          fi
+          pnpm install --frozen-lockfile
 
       # Step 5: Run linting
       - name: Lint code
