@@ -46,19 +46,23 @@ jobs:
           fi
           pnpm install --frozen-lockfile
 
-      # Step 5: Run linting
+      # Step 5: Format code
+      - name: Format code
+        run: pnpm prettier --write .
+        
+      # Step 6: Run linting
       - name: Lint code
-        run: pnpm lint
+        run: pnpm lint --fix
 
-      # Step 6: Run unit tests
+      # Step 7: Run unit tests
       - name: Run tests
         run: pnpm test
 
-      # Step 7: Generate test coverage
+      # Step 8: Generate test coverage
       - name: Generate coverage report
         run: pnpm test:coverage
 
-      # Step 8: Upload coverage to Codecov
+      # Step 9: Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
