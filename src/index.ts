@@ -1,4 +1,7 @@
+// Exports des constantes
 export * from './constants';
+
+// Exports des utilitaires
 export * from './utils/arrayUtils';
 export * from './utils/dates/advancedDateUtils';
 export * from './utils/dates/dateUtils';
@@ -19,7 +22,18 @@ export * from './utils/logger';
 export * from './utils/objectUtils';
 export * from './utils/randomUtils';
 export * from './utils/stringUtils';
+
+// Exports des validations
 export * from './utils/validation/emailUtils';
 export * from './utils/validation/uuidUtils';
 
+// Exports des types
 export { DeepPartial as TypesDeepPartial } from './types';
+
+// Exports des nouveaux hooks
+export * from './hooks/useDebounce';
+export * from './hooks/useFetch';
+
+// Exports des nouveaux types
+export * from './types/APIResponse';
+export * from './types/User';
