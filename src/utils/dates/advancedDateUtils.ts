@@ -24,8 +24,7 @@ export const dateDifference = (date1: string, date2: string): number =>
  * @param date - The date string to validate
  * @returns True if the date is valid, otherwise false
  */
-export const isValidDate = (date: string): boolean =>
-  dayjs(date).isValid();
+export const isValidDate = (date: string): boolean => dayjs(date).isValid();
 
 /**
  * Adds days to a given date.

@@ -19,8 +19,13 @@ export class WinstonLogger {
       ),
       transports: [
         new transports.Console(),
-        new transports.File({ filename: process.env.ERROR_LOG || `${LOG_DIRECTORY}/error.log`, level: 'error' }),
-        new transports.File({ filename: process.env.COMBINED_LOG || `${LOG_DIRECTORY}/combined.log` }),
+        new transports.File({
+          filename: process.env.ERROR_LOG || `${LOG_DIRECTORY}/error.log`,
+          level: 'error',
+        }),
+        new transports.File({
+          filename: process.env.COMBINED_LOG || `${LOG_DIRECTORY}/combined.log`,
+        }),
       ],
     });
   }

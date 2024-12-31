@@ -18,7 +18,7 @@
     "build": "npm run generate-index && tsc",
     "test": "vitest run",
     "test:coverage": "vitest --coverage",
-    "lint": "eslint src --fix",
+    "lint": "eslint . --ext .ts,.tsx --fix",
     "watch": "tsc --watch",
     "type-check": "tsc --noEmit",
     "postinstall": "node -e \"if (process.platform === 'win32') { require('child_process').execSync('if exist .husky\\\\_ (move .husky\\\\_\\\\* .husky\\\\ && rmdir .husky\\\\_)') }\"",
@@ -26,7 +26,8 @@
     "check:outdated": "pnpm outdated",
     "generate-index": "ts-node --esm generateIndex.ts",
     "format": "prettier --write .",
-    "lint:staged": "lint-staged"
+    "lint:staged": "lint-staged",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "dayjs": "^1.11.13",
@@ -91,5 +92,14 @@
     "url": "https://github.com/organization-ai-projects/shared-base/issues"
   },
   "homepage": "https://github.com/organization-ai-projects/shared-base#readme",
-  "packageManager": "pnpm@8.15.4"
+  "packageManager": "pnpm@8.15.4",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,yml,yaml,md}": [
+      "prettier --write"
+    ]
+  }
 }

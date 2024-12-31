@@ -8,7 +8,7 @@ describe('StringUtils', () => {
       expect(capitalize('world')).toBe('World');
     });
 
-    it('devrait retourner une chaîne vide si l\'entrée est vide', () => {
+    it("devrait retourner une chaîne vide si l'entrée est vide", () => {
       expect(capitalize('')).toBe('');
     });
 

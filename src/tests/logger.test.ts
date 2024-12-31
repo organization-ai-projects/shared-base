@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from 'vitest';
 import type { ILogger } from '../utils/interfaces/ILogger';
 
 const mockConsoleError = vi.fn();
@@ -35,9 +35,25 @@ interface CircularObject {
   self?: CircularObject;
 }
 
+interface MockLoggerInstance {
+  info: Mock;
+  error: Mock;
+  warn: Mock;
+}
+
+interface MockReturnType {
+  timestamp: string;
+  level: string;
+  message: string;
+}
+
+interface CircularRef {
+  self: CircularRef | null;
+}
+
 describe('Logger', () => {
   let logger: ILogger;
-  let mockLoggerInstance: { info: any; error: any; warn: any; };
+  let mockLoggerInstance: MockLoggerInstance;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -81,8 +97,8 @@ describe('Logger', () => {
       new WinstonLogger();
       expect(mockWinston.createLogger).toHaveBeenCalledWith(
         expect.objectContaining({
-          level: 'debug'
-        })
+          level: 'debug',
+        }),
       );
     });
 
@@ -91,28 +107,28 @@ describe('Logger', () => {
       new WinstonLogger();
       expect(mockWinston.createLogger).toHaveBeenCalledWith(
         expect.objectContaining({
-          level: 'info'
-        })
+          level: 'info',
+        }),
       );
     });
 
     it('devrait configurer les chemins de fichiers de log personnalisés', () => {
       process.env.ERROR_LOG = 'custom/error.log';
       process.env.COMBINED_LOG = 'custom/combined.log';
-      
+
       new WinstonLogger();
 
       expect(mockWinston.transports.File).toHaveBeenCalledWith(
         expect.objectContaining({
           filename: 'custom/error.log',
-          level: 'error'
-        })
+          level: 'error',
+        }),
       );
 
       expect(mockWinston.transports.File).toHaveBeenCalledWith(
         expect.objectContaining({
-          filename: 'custom/combined.log'
-        })
+          filename: 'custom/combined.log',
+        }),
       );
     });
   });
@@ -186,7 +202,7 @@ describe('Logger', () => {
     });
 
     it('should handle circular objects', () => {
-      const circularObj: any = { self: null };
+      const circularObj: CircularRef = { self: null };
       circularObj.self = circularObj;
       logger.info(circularObj);
       expect(mockLoggerInstance.info).toHaveBeenCalledWith('[Circular Object]');
@@ -219,17 +235,19 @@ describe('Logger', () => {
 
     beforeEach(() => {
       mockFs.existsSync.mockReturnValue(true);
-      const timestampFn = () => '2024-03-14T12:00:00.000Z';
+      const timestampFn = (): string => '2024-03-14T12:00:00.000Z';
       mockWinston.format.timestamp.mockReturnValue(timestampFn);
-      mockWinston.format.printf.mockImplementation(fn => {
-        const result = fn({
-          timestamp: timestampFn(),
-          level: 'info',
-          message: 'test message'
-        });
-        expect(result).toBe('[2024-03-14T12:00:00.000Z] INFO: test message');
-        return result;
-      });
+      mockWinston.format.printf.mockImplementation(
+        (fn: (info: MockReturnType) => string): string => {
+          const result = fn({
+            timestamp: timestampFn(),
+            level: 'info',
+            message: 'test message',
+          });
+          expect(result).toBe('[2024-03-14T12:00:00.000Z] INFO: test message');
+          return result;
+        },
+      );
     });
 
     it('devrait formater les messages avec timestamp et niveau', () => {
@@ -258,10 +276,7 @@ describe('Logger', () => {
       });
 
       logger.info('test');
-      expect(mockConsoleError).toHaveBeenLastCalledWith(
-        'Logging error:',
-        erreur
-      );
+      expect(mockConsoleError).toHaveBeenLastCalledWith('Logging error:', erreur);
     });
 
     it('devrait gérer les erreurs de logging pour error', () => {
@@ -271,10 +286,7 @@ describe('Logger', () => {
       });
 
       logger.error('test');
-      expect(mockConsoleError).toHaveBeenLastCalledWith(
-        'Logging error:',
-        erreur
-      );
+      expect(mockConsoleError).toHaveBeenLastCalledWith('Logging error:', erreur);
     });
 
     it('devrait gérer les erreurs de logging pour warn', () => {
@@ -284,17 +296,13 @@ describe('Logger', () => {
       });
 
       logger.warn('test');
-      expect(mockConsoleError).toHaveBeenLastCalledWith(
-        'Logging error:',
-        erreur
-      );
+      expect(mockConsoleError).toHaveBeenLastCalledWith('Logging error:', erreur);
     });
 
     it('devrait gérer les erreurs de formatage des objets circulaires', () => {
-      const erreurCirculaire = new Error('Erreur de sérialisation JSON');
       const circularRef: CircularObject = {};
       circularRef.self = circularRef;
-      
+
       logger.info(circularRef);
       expect(mockLoggerInstance.info).toHaveBeenCalledWith('[Circular Object]');
     });
