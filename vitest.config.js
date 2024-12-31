@@ -14,7 +14,7 @@ export default defineConfig({
         '**/interfaces/**',
         '**/generateIndex.ts',
         '**/release.config.mjs',
-        '**/tests/**', // Exclure tous les fichiers de tests, y compris les mocks
+        '**/tests/**',
       ],
       reporter: ['text', 'html', 'json'],
       threshold: {
