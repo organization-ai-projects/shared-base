@@ -16,12 +16,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18, 20] # Test with supported Node.js LTS versions
-
     steps:
-      # Step 1: Checkout the code
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -31,20 +27,16 @@ jobs:
         with:
           version: 8 # Specify the pnpm version
 
-      # Step 3: Set up Node.js and cache
+      # Step 3: Set up Node.js and cache (Only Node 20 here)
       - name: Set up Node.js and cache
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '20' # Only use Node 20
           cache: 'pnpm' # Enable caching for pnpm
 
       # Step 4: Install dependencies
       - name: Install dependencies
-        run: |
-          if [ "${{ matrix.node-version }}" = "18" ]; then
-            export NODE_NO_WARNINGS=1
-          fi
-          pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       # Step 5: Format code
       - name: Format code
