@@ -1,3 +1,12 @@
+# [2.1.0-extend-structure.1](https://github.com/organization-ai-projects/shared-base/compare/v2.0.0...v2.1.0-extend-structure.1) (2025-01-01)
+
+
+### Features
+
+* add utils, hooks, and tests with initial implementations ([c099f01](https://github.com/organization-ai-projects/shared-base/commit/c099f01e96302c31d6f829878174a26c7f8390f3))
+* add utils, hooks, and tests with Vitest support ([ef286fb](https://github.com/organization-ai-projects/shared-base/commit/ef286fb077b7108a62150d2ceaccb48435a63591))
+* enhance structure with new features and full test coverage ([17ab6f1](https://github.com/organization-ai-projects/shared-base/commit/17ab6f121635c79f91c5fb507ccf3302e824f814))
+
 # [2.0.0](https://github.com/organization-ai-projects/shared-base/compare/v1.3.0...v2.0.0) (2024-12-31)
 
 ### Code Refactoring
