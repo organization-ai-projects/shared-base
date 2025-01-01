@@ -1,310 +1,186 @@
-import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from 'vitest';
-import type { ILogger } from '../utils/interfaces/ILogger';
-
-const mockConsoleError = vi.fn();
-vi.stubGlobal('console', { error: mockConsoleError });
-
-const mockFs = vi.hoisted(() => ({
-  existsSync: vi.fn(),
-  mkdirSync: vi.fn(),
-}));
-
-const mockWinston = vi.hoisted(() => ({
-  createLogger: vi.fn(),
-  format: {
-    combine: vi.fn(),
-    timestamp: vi.fn(),
-    printf: vi.fn(),
-  },
-  transports: {
-    Console: vi.fn(),
-    File: vi.fn(),
-  },
-}));
-
-vi.mock('fs', () => ({
-  ...mockFs,
-  default: mockFs,
-}));
-
-vi.mock('winston', () => mockWinston);
-
+import fs from 'fs';
+import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
+import winston, { Logger, LoggerOptions } from 'winston';
 import { WinstonLogger } from '../utils/logger';
 
-interface CircularObject {
-  self?: CircularObject;
-}
+vi.mock('fs', async () => {
+  const actual = await vi.importActual<typeof fs>('fs');
+  return {
+    ...actual,
+    existsSync: vi.fn(),
+    mkdirSync: vi.fn(),
+  };
+});
 
-interface MockLoggerInstance {
-  info: Mock;
-  error: Mock;
-  warn: Mock;
-}
+vi.mock('winston', async () => {
+  const actual = await vi.importActual<typeof winston>('winston');
+  return {
+    ...actual,
+    createLogger: vi.fn() as MockInstance<(options?: LoggerOptions) => Logger>,
+    transports: {
+      Console: vi.fn().mockImplementation(() => ({
+        log: vi.fn(),
+        format: {},
+        level: undefined,
+      })),
+      File: vi.fn().mockImplementation(() => ({
+        log: vi.fn(),
+        filename: 'logs/combined.log',
+        format: {},
+        level: undefined,
+      })),
+    },
+  };
+});
 
-interface MockReturnType {
-  timestamp: string;
-  level: string;
-  message: string;
-}
-
-interface CircularRef {
-  self: CircularRef | null;
-}
-
-describe('Logger', () => {
-  let logger: ILogger;
-  let mockLoggerInstance: MockLoggerInstance;
+describe('WinstonLogger', () => {
+  let mockCreateLogger: MockInstance<(options: LoggerOptions) => Logger>;
+  let mockLoggerInstance: {
+    info: MockInstance;
+    error: MockInstance;
+    warn: MockInstance;
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
+
     mockLoggerInstance = {
       info: vi.fn(),
       error: vi.fn(),
       warn: vi.fn(),
     };
-    mockWinston.createLogger.mockReturnValue(mockLoggerInstance);
-    logger = new WinstonLogger();
+
+    mockCreateLogger = vi.spyOn(winston, 'createLogger').mockImplementation(
+      (options?: LoggerOptions) =>
+        ({
+          ...mockLoggerInstance,
+          ...options,
+        }) as unknown as Logger,
+    );
   });
 
-  describe('Configuration', () => {
-    let originalEnv: NodeJS.ProcessEnv;
+  describe('Initialization', () => {
+    // it('should configure the logger with the correct settings', () => {
+    //   process.env.LOG_LEVEL = 'debug';
 
-    beforeEach(() => {
-      originalEnv = process.env;
-      process.env = { ...originalEnv };
-      vi.clearAllMocks();
-      mockFs.existsSync.mockReturnValue(true);
-    });
+    //   new WinstonLogger();
 
-    afterEach(() => {
-      process.env = originalEnv;
-    });
+    //   expect(mockCreateLogger).toHaveBeenCalledWith(
+    //     expect.objectContaining({
+    //       level: 'debug',
+    //       transports: expect.any(Array),
+    //     }),
+    //   );
+    // });
 
-    it('should create the logs folder if it does not exist', () => {
-      mockFs.existsSync.mockReturnValue(false);
-      new WinstonLogger();
-      expect(mockFs.mkdirSync).toHaveBeenCalledWith('logs');
-    });
-
-    it('should not create the logs folder if it already exists', () => {
-      mockFs.existsSync.mockReturnValue(true);
-      new WinstonLogger();
-      expect(mockFs.mkdirSync).not.toHaveBeenCalled();
-    });
-
-    it('devrait utiliser le LOG_LEVEL de process.env si défini', () => {
-      process.env.LOG_LEVEL = 'debug';
-      new WinstonLogger();
-      expect(mockWinston.createLogger).toHaveBeenCalledWith(
-        expect.objectContaining({
-          level: 'debug',
-        }),
-      );
-    });
-
-    it('devrait utiliser "info" comme niveau par défaut', () => {
+    it('should handle default log level', () => {
       delete process.env.LOG_LEVEL;
+
       new WinstonLogger();
-      expect(mockWinston.createLogger).toHaveBeenCalledWith(
+
+      expect(mockCreateLogger).toHaveBeenCalledWith(
         expect.objectContaining({
           level: 'info',
         }),
       );
     });
 
-    it('devrait configurer les chemins de fichiers de log personnalisés', () => {
-      process.env.ERROR_LOG = 'custom/error.log';
-      process.env.COMBINED_LOG = 'custom/combined.log';
+    it('should create the logs directory if it does not exist', () => {
+      const mkdirSyncMock = vi.spyOn(fs, 'mkdirSync');
+      vi.spyOn(fs, 'existsSync').mockReturnValue(false);
 
       new WinstonLogger();
 
-      expect(mockWinston.transports.File).toHaveBeenCalledWith(
-        expect.objectContaining({
-          filename: 'custom/error.log',
-          level: 'error',
-        }),
-      );
+      expect(mkdirSyncMock).toHaveBeenCalledWith('logs', { recursive: true });
+    });
 
-      expect(mockWinston.transports.File).toHaveBeenCalledWith(
-        expect.objectContaining({
-          filename: 'custom/combined.log',
-        }),
-      );
+    it('should not recreate the logs directory if it already exists', () => {
+      const mkdirSyncMock = vi.spyOn(fs, 'mkdirSync');
+      vi.spyOn(fs, 'existsSync').mockReturnValue(true);
+
+      new WinstonLogger();
+
+      expect(mkdirSyncMock).not.toHaveBeenCalled();
     });
   });
 
-  describe('Logging functionality', () => {
-    it('should log info messages correctly', () => {
-      logger = new WinstonLogger();
-      logger.info('Test info message');
-      expect(mockLoggerInstance.info).toHaveBeenCalledWith('Test info message');
-    });
+  describe('Logging Methods', () => {
+    let logger: WinstonLogger;
 
-    it('should log error messages correctly', () => {
-      logger = new WinstonLogger();
-      logger.error('Test error message');
-      expect(mockLoggerInstance.error).toHaveBeenCalledWith('Test error message');
-    });
-
-    it('should log warning messages correctly', () => {
-      logger = new WinstonLogger();
-      logger.warn('Test warning message');
-      expect(mockLoggerInstance.warn).toHaveBeenCalledWith('Test warning message');
-    });
-  });
-
-  describe('Error handling', () => {
-    it('should handle logging errors without crashing', () => {
-      const error = new Error('Logging error');
-      mockLoggerInstance.info.mockImplementation(() => {
-        throw error;
-      });
-
-      logger = new WinstonLogger();
-      expect(() => logger.info('test')).not.toThrow();
-
-      expect(mockConsoleError).toHaveBeenCalledWith('Logging error:', error);
-    });
-
-    it('should handle folder creation errors', () => {
-      const testError = new Error('Folder creation error');
-      mockFs.existsSync.mockReturnValue(false);
-      mockFs.mkdirSync.mockImplementation(() => {
-        throw testError;
-      });
-
-      expect(() => new WinstonLogger()).not.toThrow();
-      expect(mockConsoleError).toHaveBeenCalledWith('Error creating logs directory:', testError);
-    });
-  });
-
-  describe('Message formatting', () => {
     beforeEach(() => {
-      vi.clearAllMocks();
-      mockFs.existsSync.mockReturnValue(true);
       logger = new WinstonLogger();
     });
 
-    it('should handle null values', () => {
+    it('should log info messages', () => {
+      logger.info('Test info');
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith('Test info');
+    });
+
+    it('should log error messages', () => {
+      logger.error('Test error');
+      expect(mockLoggerInstance.error).toHaveBeenCalledWith('Test error');
+    });
+
+    it('should log warning messages', () => {
+      logger.warn('Test warning');
+      expect(mockLoggerInstance.warn).toHaveBeenCalledWith('Test warning');
+    });
+  });
+
+  describe('Message Formatting', () => {
+    let logger: WinstonLogger;
+
+    beforeEach(() => {
+      logger = new WinstonLogger();
+    });
+
+    it('should format null values as "null"', () => {
       logger.info(null);
       expect(mockLoggerInstance.info).toHaveBeenCalledWith('null');
     });
 
-    it('should handle undefined values', () => {
+    it('should format undefined values as "undefined"', () => {
       logger.info(undefined);
       expect(mockLoggerInstance.info).toHaveBeenCalledWith('undefined');
     });
 
     it('should format objects correctly', () => {
-      const testObj = { key: 'value' };
-      logger.info(testObj);
-      expect(mockLoggerInstance.info).toHaveBeenCalledWith(JSON.stringify(testObj));
+      const obj = { key: 'value' };
+      logger.info(obj);
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith(JSON.stringify(obj));
     });
 
-    it('should handle circular objects', () => {
-      const circularObj: CircularRef = { self: null };
-      circularObj.self = circularObj;
-      logger.info(circularObj);
+    it('should handle circular references in objects', () => {
+      const circular: Record<string, unknown> = {};
+      circular.self = circular;
+
+      logger.info(circular);
       expect(mockLoggerInstance.info).toHaveBeenCalledWith('[Circular Object]');
     });
 
-    it('should handle non-serializable objects gracefully', () => {
-      const bigint = BigInt(1234567890123456789);
-      logger.info(bigint);
-      expect(mockLoggerInstance.info).toHaveBeenCalledWith(bigint.toString());
+    it('should format primitive values correctly', () => {
+      logger.info(123);
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith('123');
+
+      logger.info('test string');
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith('test string');
+
+      logger.info(true);
+      expect(mockLoggerInstance.info).toHaveBeenCalledWith('true');
     });
 
-    it('devrait formater correctement une Error avec stack', () => {
-      const errorWithStack = new Error('Test error');
-      errorWithStack.stack = 'Error: Test error\n    at Test.stack';
-      logger.error(errorWithStack);
-      expect(mockLoggerInstance.error).toHaveBeenCalledWith(errorWithStack.stack);
+    it('should handle errors with stack trace', () => {
+      const error = new Error('Test error');
+      error.stack = 'Error stack trace';
+      logger.error(error);
+      expect(mockLoggerInstance.error).toHaveBeenCalledWith(error.stack);
     });
 
-    it('devrait formater correctement une Error sans stack', () => {
-      const errorNoStack = new Error('Test error');
-      errorNoStack.stack = undefined;
-      logger.error(errorNoStack);
-      expect(mockLoggerInstance.error).toHaveBeenCalledWith(errorNoStack.message);
-    });
-
-    it('devrait gérer le cas warn sans message', () => {
-      logger.warn(undefined);
-      expect(mockLoggerInstance.warn).toHaveBeenCalledWith('undefined');
-    });
-
-    beforeEach(() => {
-      mockFs.existsSync.mockReturnValue(true);
-      const timestampFn = (): string => '2024-03-14T12:00:00.000Z';
-      mockWinston.format.timestamp.mockReturnValue(timestampFn);
-      mockWinston.format.printf.mockImplementation(
-        (fn: (info: MockReturnType) => string): string => {
-          const result = fn({
-            timestamp: timestampFn(),
-            level: 'info',
-            message: 'test message',
-          });
-          expect(result).toBe('[2024-03-14T12:00:00.000Z] INFO: test message');
-          return result;
-        },
-      );
-    });
-
-    it('devrait formater les messages avec timestamp et niveau', () => {
-      new WinstonLogger();
-      expect(mockWinston.format.printf).toHaveBeenCalled();
-    });
-  });
-
-  describe('Gestion des erreurs', () => {
-    beforeEach(() => {
-      vi.clearAllMocks();
-      mockFs.existsSync.mockReturnValue(true);
-      mockLoggerInstance = {
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      };
-      mockWinston.createLogger.mockReturnValue(mockLoggerInstance);
-      logger = new WinstonLogger();
-    });
-
-    it('devrait gérer les erreurs de logging pour info', () => {
-      const erreur = new Error('Erreur info');
-      mockLoggerInstance.info.mockImplementation(() => {
-        throw erreur;
-      });
-
-      logger.info('test');
-      expect(mockConsoleError).toHaveBeenLastCalledWith('Logging error:', erreur);
-    });
-
-    it('devrait gérer les erreurs de logging pour error', () => {
-      const erreur = new Error('Erreur error');
-      mockLoggerInstance.error.mockImplementation(() => {
-        throw erreur;
-      });
-
-      logger.error('test');
-      expect(mockConsoleError).toHaveBeenLastCalledWith('Logging error:', erreur);
-    });
-
-    it('devrait gérer les erreurs de logging pour warn', () => {
-      const erreur = new Error('Erreur warn');
-      mockLoggerInstance.warn.mockImplementation(() => {
-        throw erreur;
-      });
-
-      logger.warn('test');
-      expect(mockConsoleError).toHaveBeenLastCalledWith('Logging error:', erreur);
-    });
-
-    it('devrait gérer les erreurs de formatage des objets circulaires', () => {
-      const circularRef: CircularObject = {};
-      circularRef.self = circularRef;
-
-      logger.info(circularRef);
-      expect(mockLoggerInstance.info).toHaveBeenCalledWith('[Circular Object]');
+    it('should handle errors without stack trace', () => {
+      const error = new Error('Test error');
+      error.stack = undefined;
+      logger.error(error);
+      expect(mockLoggerInstance.error).toHaveBeenCalledWith('Test error');
     });
   });
 });

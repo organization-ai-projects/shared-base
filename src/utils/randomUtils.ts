@@ -1,32 +1,21 @@
-// Utilities for generating random data
-import { randomUUID } from 'crypto';
-
-/**
- * Generate a random string of a specified length.
- * @param length - The length of the string to generate.
- * @returns A random alphanumeric string.
- */
-export function randomString(length: number): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  return Array.from({ length }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join(
-    '',
-  );
-}
-
-/**
- * Generate a random number within a given range.
- * @param min - The minimum value (inclusive).
- * @param max - The maximum value (inclusive).
- * @returns A random number between min and max.
- */
-export function randomNumber(min: number, max: number): number {
+export function generateRandomNumber(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-/**
- * Generate a random UUID (version 4).
- * @returns A random UUID string.
- */
+export function randomString(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 export function generateUUID(): string {
-  return randomUUID();
+  // UUID generation logic
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0,
+      v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 }

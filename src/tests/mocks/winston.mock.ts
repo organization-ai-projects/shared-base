@@ -1,27 +1,30 @@
 import { vi } from 'vitest';
 
-export const mockLogger = {
+const mockFormat = {
+  combine: vi.fn().mockReturnThis(),
+  timestamp: vi.fn().mockReturnThis(),
+  printf: vi.fn().mockReturnThis(),
+  colorize: vi.fn().mockReturnThis(),
+  simple: vi.fn().mockReturnThis(),
+  json: vi.fn().mockReturnThis(),
+};
+
+const mockConsoleTransport = vi.fn();
+const mockFileTransport = vi.fn();
+
+const mockLogger = {
   info: vi.fn(),
   error: vi.fn(),
   warn: vi.fn(),
 };
 
-const mockWinston = {
-  createLogger: vi.fn(() => mockLogger),
-  format: {
-    combine: vi.fn(() => ({})),
-    timestamp: vi.fn(() => ({})),
-    printf: vi.fn(() => ({})),
-  },
+const winston = {
+  createLogger: vi.fn().mockReturnValue(mockLogger),
+  format: mockFormat,
   transports: {
-    Console: vi.fn(),
-    File: vi.fn(),
+    Console: mockConsoleTransport,
+    File: mockFileTransport,
   },
 };
 
-vi.mock('winston', () => ({
-  default: mockWinston,
-  ...mockWinston,
-}));
-
-export default mockWinston;
+export { winston as default, mockLogger, mockConsoleTransport, mockFileTransport };

@@ -17,44 +17,38 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Install pnpm
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8 # Specify the pnpm version
+          version: 9.15.2
 
-      # Step 3: Set up Node.js and cache (Only Node 20 here)
       - name: Set up Node.js and cache
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # Only use Node 20
-          cache: 'pnpm' # Enable caching for pnpm
+          node-version: '20'
+          cache: 'pnpm'
 
-      # Step 4: Install dependencies
+      - name: Clear pnpm cache
+        run: pnpm store prune
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Step 5: Format code
       - name: Format code
         run: pnpm prettier --write .
 
-      # Step 6: Run linting
       - name: Lint code
         run: pnpm lint --fix
 
-      # Step 7: Run unit tests
       - name: Run tests
         run: pnpm test
 
-      # Step 8: Generate test coverage
       - name: Generate coverage report
         run: pnpm test:coverage
 
-      # Step 9: Upload coverage to Codecov
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -77,7 +71,7 @@ jobs:
 
       - uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 9.15.2
 
       - uses: actions/setup-node@v3
         with:
