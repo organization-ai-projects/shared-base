@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { formatDate } from '../../utils/dates/dateUtils';
 
 describe('formatDate', () => {
-  it('should format date in French by default', () => {
+  it("should format date in French when locale is 'fr-FR'", () => {
     const date = new Date('2024-12-25');
-    expect(formatDate(date)).toBe('25 décembre 2024');
+    expect(formatDate(date, 'fr-FR')).toBe('25 décembre 2024');
   });
 
   it("should format date in English when locale is 'en-US'", () => {
@@ -23,7 +23,7 @@ describe('formatDate', () => {
   });
 
   it('should throw an error for invalid dates', () => {
-    expect(() => formatDate('invalid-date')).toThrow('Invalid date provided.');
+    expect(() => formatDate(new Date('invalid-date'))).toThrow('Invalid date provided.');
   });
 
   it('should handle string date inputs', () => {

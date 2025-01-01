@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 
+interface ErrorResponse {
+  error: string;
+}
+
 export function useFetch<T>(url: string, options?: RequestInit): [T | null, boolean, Error | null] {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -7,7 +11,13 @@ export function useFetch<T>(url: string, options?: RequestInit): [T | null, bool
 
   useEffect(() => {
     fetch(url, options)
-      .then((response) => response.json())
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorData = (await response.json()) as ErrorResponse;
+          throw new Error(`${errorData.error} (Status: ${response.status})`);
+        }
+        return response.json();
+      })
       .then((data: T) => {
         setData(data);
         setLoading(false);
@@ -16,7 +26,7 @@ export function useFetch<T>(url: string, options?: RequestInit): [T | null, bool
         setError(err);
         setLoading(false);
       });
-  }, [url]);
+  }, [url, options]);
 
   return [data, loading, error];
 }

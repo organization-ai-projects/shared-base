@@ -1,7 +1,18 @@
-export function formatDate(date: Date, format: string): string {
-  const options: Intl.DateTimeFormatOptions = {};
-  if (format.includes('YYYY')) options.year = 'numeric';
-  if (format.includes('MM')) options.month = '2-digit';
-  if (format.includes('DD')) options.day = '2-digit';
-  return new Intl.DateTimeFormat('en-US', options).format(date);
+export function formatDate(
+  date: string | Date,
+  locale: string = 'en-US',
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  const dateObj = typeof date === 'string' ? new Date(date) : date;
+  if (!(dateObj instanceof Date) || isNaN(dateObj.getTime())) {
+    throw new Error('Invalid date provided.');
+  }
+
+  const defaultOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  };
+
+  return new Intl.DateTimeFormat(locale, { ...defaultOptions, ...options }).format(dateObj);
 }

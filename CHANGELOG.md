@@ -1,67 +1,69 @@
 # [2.0.0](https://github.com/organization-ai-projects/shared-base/compare/v1.3.0...v2.0.0) (2024-12-31)
 
-
 ### Code Refactoring
 
-* **test:** improve test structure and type safety ([3234b6f](https://github.com/organization-ai-projects/shared-base/commit/3234b6f38cde1fa8f01b4e70f836d43c03ecaa67))
-
+- **test:** improve test structure and type safety ([3234b6f](https://github.com/organization-ai-projects/shared-base/commit/3234b6f38cde1fa8f01b4e70f836d43c03ecaa67))
 
 ### Features
 
-* **utils:** add advanced date and string utilities ([f6cc822](https://github.com/organization-ai-projects/shared-base/commit/f6cc8221b7d707ab80f1c5dd78c0867a944acdbc))
-
+- **utils:** add advanced date and string utilities ([f6cc822](https://github.com/organization-ai-projects/shared-base/commit/f6cc8221b7d707ab80f1c5dd78c0867a944acdbc))
 
 ### BREAKING CHANGES
 
-* **test:** Replace any types with specific interfaces
+- **test:** Replace any types with specific interfaces
 
 ✨ Features:
+
 - Add CircularObject interface for tests
 - Implement hoisted mock functions
 - Enhance error handling coverage
 
 � Chores:
+
 - Remove any type usage
 - Restructure Winston mocks
 - Improve test organization
 
 � Tests:
+
 - Add circular reference test cases
 - Enhance error handling tests
 - Improve mock structure
+
 * **utils:** Date utilities now require dayjs ^1.11.0
 
 # [2.0.0-utils-enhancements.1](https://github.com/organization-ai-projects/shared-base/compare/v1.3.0...v2.0.0-utils-enhancements.1) (2024-12-31)
 
-
 ### Code Refactoring
 
-* **test:** improve test structure and type safety ([3234b6f](https://github.com/organization-ai-projects/shared-base/commit/3234b6f38cde1fa8f01b4e70f836d43c03ecaa67))
-
+- **test:** improve test structure and type safety ([3234b6f](https://github.com/organization-ai-projects/shared-base/commit/3234b6f38cde1fa8f01b4e70f836d43c03ecaa67))
 
 ### Features
 
-* **utils:** add advanced date and string utilities ([f6cc822](https://github.com/organization-ai-projects/shared-base/commit/f6cc8221b7d707ab80f1c5dd78c0867a944acdbc))
-
+- **utils:** add advanced date and string utilities ([f6cc822](https://github.com/organization-ai-projects/shared-base/commit/f6cc8221b7d707ab80f1c5dd78c0867a944acdbc))
 
 ### BREAKING CHANGES
 
-* **test:** Replace any types with specific interfaces
+- **test:** Replace any types with specific interfaces
 
 ✨ Features:
+
 - Add CircularObject interface for tests
 - Implement hoisted mock functions
 - Enhance error handling coverage
 
 � Chores:
+
 - Remove any type usage
 - Restructure Winston mocks
 - Improve test organization
 
 � Tests:
+
 - Add circular reference test cases
 - Enhance error handling tests
 - Improve mock structure
+
 * **utils:** Date utilities now require dayjs ^1.11.0
 
 # [1.3.0](https://github.com/organization-ai-projects/shared-base/compare/v1.2.0...v1.3.0) (2024-12-30)
