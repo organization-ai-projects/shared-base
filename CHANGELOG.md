@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/organization-ai-projects/shared-base/compare/v2.1.0...v2.2.0) (2025-01-02)
+
+
+### Features
+
+* update Node.js version to 22 in CI and package.json ([cd58a30](https://github.com/organization-ai-projects/shared-base/commit/cd58a30df7f51736979c6464d5a2cb191e321680))
+
 # [2.1.0](https://github.com/organization-ai-projects/shared-base/compare/v2.0.0...v2.1.0) (2025-01-01)
 
 
