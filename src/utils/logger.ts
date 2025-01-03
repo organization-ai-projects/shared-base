@@ -1,9 +1,9 @@
 import fs from 'fs';
 import winston from 'winston';
-import { ILogger } from './interfaces/ILogger';
+import type { ILogger } from './interfaces/ILogger';
 
-const LOG_DIRECTORY = process.env.LOG_DIRECTORY || 'logs';
-const LOG_LEVEL = process.env.LOG_LEVEL || 'info';
+const LOG_DIRECTORY = process.env['LOG_DIRECTORY'] || 'logs';
+const LOG_LEVEL = process.env['LOG_LEVEL'] || 'info';
 const COMBINED_LOG = `${LOG_DIRECTORY}/combined.log`;
 
 export class WinstonLogger implements ILogger {
@@ -16,7 +16,7 @@ export class WinstonLogger implements ILogger {
       level: LOG_LEVEL,
       format: winston.format.combine(
         winston.format.timestamp(),
-        winston.format.printf((info) => `[${info.timestamp}] ${info.level}: ${info.message}`),
+        winston.format.printf((info) => `[${info['timestamp']}] ${info.level}: ${info.message}`),
       ),
       transports: [
         new winston.transports.Console({

@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Post-checkout tasks
+echo "🔄 Running post-checkout tasks..."
+
+# Install dependencies if needed
+if [ -f pnpm-lock.yaml ]; then
+  echo "📦 Installing dependencies..."
+  pnpm install --frozen-lockfile
+fi
+
+# Clear build or cache directories if applicable
+echo "🧹 Clearing cache (if any)..."
+pnpm store prune || echo "⚠️ PNPM cache could not be pruned."
+
+# Additional tasks, like setting up the environment
+echo "🌍 Setting up environment variables..."
+if [ -f .env ]; then
+  echo "✅ .env file found. Ready for development."
+else
+  echo "⚠️ No .env file found. Please ensure your environment variables are configured."
+fi
+
+echo "✅ Post-checkout tasks completed successfully."

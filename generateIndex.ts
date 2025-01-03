@@ -45,14 +45,14 @@ function getExportsFromFolder(
       if (matches) {
         matches.forEach((match) => {
           const [, , memberName] = match.split(/\s+/);
-          if (exportedMembers.has(memberName)) {
+          if (memberName && exportedMembers.has(memberName)) {
             const aliasName = `${memberName}From${path.basename(entry.name, '.ts')}`
               .replace(/([a-z])([A-Z])/g, '$1$2')
               .replace(/[^a-zA-Z0-9]/g, '');
             if (!exports.find((exp) => exp.includes(`as ${aliasName}`))) {
               exports.push(`export { ${memberName} as ${aliasName} } from '${exportPath}';`);
             }
-          } else {
+          } else if (memberName) {
             exportedMembers.set(memberName, exportPath);
           }
         });
@@ -79,7 +79,6 @@ function generateIndex(): void {
   content += "export { DeepPartial as TypesDeepPartial } from './types';\n\n";
 
   fs.writeFileSync(INDEX_FILE, content, 'utf8');
-  console.log('index.ts generated successfully!');
 }
 
 generateIndex();

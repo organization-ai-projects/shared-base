@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "clean": "rimraf dist",
-    "build": "pnpm tsc && pnpm run generate-index",
+    "build": "pnpm clean && pnpm tsc && pnpm run generate-index",
     "generate-index": "node -e \"import('fs').then(fs => { if (!fs.existsSync('./dist/generateIndex.js')) { console.error('File dist/generateIndex.js not found. Please run tsc first.'); process.exit(1); } else import('./dist/generateIndex.js'); });\"",
     "pretest": "pnpm clean",
     "test": "vitest run --no-watch",
@@ -28,22 +28,23 @@
     "lint": "eslint \"**/*.ts\" --fix",
     "type-check": "tsc --noEmit",
     "watch": "tsc --watch",
-    "prepare": "pnpm run build",
+    "prepare": "pnpm run build && husky install",
     "pack:check": "npm pack && tar -tf *.tgz",
     "check:outdated": "pnpm outdated",
     "format": "prettier --write .",
     "lint:staged": "lint-staged",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "release": "semantic-release"
   },
   "dependencies": {
-    "dayjs": "latest",
-    "dotenv": "latest",
-    "lodash": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "tslib": "latest",
-    "winston": "latest",
-    "zod": "latest"
+    "dayjs": "^1.11.0",
+    "dotenv": "^16.0.0",
+    "lodash": "^4.17.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tslib": "^2.5.0",
+    "winston": "^3.10.0",
+    "zod": "^3.22.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -51,32 +52,34 @@
     "typescript": "^5.7.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@semantic-release/changelog": "latest",
     "@semantic-release/git": "latest",
     "@semantic-release/npm": "latest",
     "@testing-library/dom": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
-    "@types/lodash": "latest",
-    "@types/node": "latest",
+    "@types/lodash": "^4.17.14",
+    "@types/node": "^22.10.5",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "@vitest/coverage-v8": "latest",
-    "@vitest/expect": "^2.1.8",
+    "@vitest/expect": "latest",
     "cross-env": "latest",
     "eslint": "latest",
     "eslint-config-prettier": "latest",
     "eslint-define-config": "latest",
     "eslint-plugin-prettier": "latest",
-    "husky": "latest",
+    "husky": "^9.1.7",
     "jsdom": "latest",
     "lint-staged": "latest",
     "msw": "latest",
     "prettier": "latest",
     "rimraf": "latest",
-    "semantic-release": "latest",
+    "semantic-release": "^24.2.1",
     "ts-node": "latest",
     "tsx": "latest",
     "typescript": "latest",
@@ -88,7 +91,8 @@
     "url": "https://github.com/organization-ai-projects/shared-base.git"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
   },
   "publishConfig": {
     "access": "public",
@@ -109,7 +113,7 @@
     "url": "https://github.com/organization-ai-projects/shared-base/issues"
   },
   "homepage": "https://github.com/organization-ai-projects/shared-base#readme",
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321",
+  "packageManager": "pnpm@9.15.2",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",

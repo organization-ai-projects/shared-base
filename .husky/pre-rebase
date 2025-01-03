@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+echo "⚠️ Preparing for rebase. Make sure you are ready for history rewrite!"

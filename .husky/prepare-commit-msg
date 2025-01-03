@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+
+# Path to the commit message file
+COMMIT_MSG_FILE=$1
+COMMIT_SOURCE=$2
+SHA1=$3
+
+# Function to validate commit message format
+validate_commit_message() {
+  local msg="$1"
+  local valid_regex="^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)(\([a-z0-9\-_]+\))?: .+"
+
+  if ! echo "$msg" | grep -Eq "$valid_regex"; then
+    echo "❌ Invalid commit message format!"
+    echo "🔗 Please follow Conventional Commits:"
+    echo "   feat(scope): add a new feature"
+    echo "   fix(scope): fix a bug"
+    echo "   chore(scope): update build process"
+    exit 1
+  fi
+
+  # Ensure no duplicate type prefixes (e.g., feat feat)
+  if echo "$msg" | grep -Eq "^(feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert) (feat|fix|chore|docs|style|refactor|perf|test|build|ci|revert)"; then
+    echo "❌ Duplicate commit type detected!"
+    echo "🔗 Ensure your message does not repeat the type prefix (e.g., 'feat feat')."
+    exit 1
+  fi
+}
+
+# Pre-fill commit message template only if empty
+if [ -z "$(cat "$COMMIT_MSG_FILE")" ]; then
+  echo "📝 Pre-filling commit message template..."
+  echo "feat(scope): Short description of your change" > "$COMMIT_MSG_FILE"
+  echo "" >> "$COMMIT_MSG_FILE"
+  echo "Provide a detailed explanation of the change here." >> "$COMMIT_MSG_FILE"
+else
+  # Validate existing commit message
+  commit_msg=$(cat "$COMMIT_MSG_FILE")
+  validate_commit_message "$commit_msg"
+fi
+
+echo "✅ Commit message is valid."

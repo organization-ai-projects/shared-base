@@ -14,19 +14,29 @@
     "types": ["vitest/globals", "node"],
     "lib": ["ESNext", "dom"],
     "resolveJsonModule": true,
-    "allowJs": true,
+    "allowJs": false,
+    "checkJs": false,
     "experimentalDecorators": true,
     "useDefineForClassFields": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "incremental": true,
+    "noUncheckedIndexedAccess": true,
+    "composite": false,
+    "noEmit": false,
+    "removeComments": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "@utils/*": ["src/utils/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@components/*": ["src/components/*"],
+      "@tests/*": ["tests/*"]
+    },
+    "noPropertyAccessFromIndexSignature": true,
+    "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true
   },
-  "include": [
-    "src/**/*",
-    "tests/**/*",
-    "./generateIndex.ts",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx"
-  ],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "tests/**/*", "generateIndex.ts"],
+  "exclude": ["node_modules", "dist", "coverage"]
 }
