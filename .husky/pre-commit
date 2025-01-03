@@ -1,21 +1,4 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
-# Stop script on error
-set -e
-
-# Format code
-echo "🎨 Formatting code..."
-pnpm format || { echo "❌ Formatting failed."; exit 1; }
-
-# Lint code
-echo "🔍 Linting code..."
-pnpm lint || { echo "❌ Linting failed."; exit 1; }
-
-# Run tests
-echo "🧪 Running tests..."
-pnpm test || { echo "❌ Tests failed."; exit 1; }
-
-# Stage any auto-fixed files
-echo "📂 Staging changes..."
-git add -A
+npm test

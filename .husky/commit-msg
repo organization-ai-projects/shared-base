@@ -1,26 +1,44 @@
 #!/usr/bin/env sh
 . "$(dirname "$0")/_/husky.sh"
 
+# Stop on error
+set -e
+
+# Debugging line to confirm hook execution
+echo "📝 commit-msg hook executed for $1" >&2
+
 # Validate commit message
 echo "📝 Validating commit message..."
 
+# Check if pnpm is installed
+if ! command -v pnpm > /dev/null; then
+  echo "❌ pnpm is not installed. Please install it from https://pnpm.io/installation."
+  exit 1
+fi
+
 # Check if Commitlint is installed
-if ! command -v pnpm commitlint > /dev/null; then
-  echo "❌ Commitlint is not installed. Please install it with 'pnpm install @commitlint/cli'."
+if ! pnpm ls @commitlint/cli > /dev/null 2>&1; then
+  echo "❌ Commitlint is not installed. Please install it with 'pnpm add -D @commitlint/cli'."
+  exit 1
+fi
+
+# Check if the commit message file exists
+if [ ! -f "$1" ]; then
+  echo "❌ Commit message file not found: $1"
   exit 1
 fi
 
 # Run Commitlint
-pnpm commitlint --edit "$1"
-
-# Check if validation passed
-if [ $? -ne 0 ]; then
+if ! pnpm commitlint --edit "$1"; then
   echo "❌ Commit message validation failed. Please follow the commit conventions."
   echo "🔗 See: https://www.conventionalcommits.org/"
-  echo "Example: feat(core): add new feature"
+  echo "Examples of valid messages:"
+  echo "  feat(core): add a new feature"
+  echo "  fix(ui): resolve alignment issue"
+  echo "  chore(deps): update dependencies"
   exit 1
 fi
 
 # Show validated message
-echo "📄 Commit message: $(cat $1)"
+echo "📄 Commit message: $(cat "$1")"
 echo "✅ Commit message validation passed."
