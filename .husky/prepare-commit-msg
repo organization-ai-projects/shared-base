@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
 
 # Path to the commit message file
 COMMIT_MSG_FILE=$1

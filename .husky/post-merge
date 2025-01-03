@@ -1,9 +1,11 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
+#!/bin/sh
 
 echo "🔄 Running post-merge tasks..."
+
+# Install dependencies if lockfile exists
 if [ -f pnpm-lock.yaml ]; then
   echo "📦 Installing dependencies..."
   pnpm install --frozen-lockfile
 fi
+
 echo "✅ Post-merge tasks completed."

@@ -1,4 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname "$0")/_/husky.sh"
+#!/bin/sh
 
 echo "🔄 Post-rewrite detected. You might want to verify your branch state."
