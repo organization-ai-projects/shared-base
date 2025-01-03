@@ -1,44 +1,48 @@
 import { afterAll, beforeAll, vi } from 'vitest';
 
 beforeAll(() => {
-  console.log('Avant tous les tests : Configuration initiale');
-
-  // Mock de `fetch`
+  // Stub global `fetch` with a mocked response
   vi.stubGlobal(
     'fetch',
     async () =>
       ({
         json: async () => ({ message: 'Mocked response' }),
+        text: async () => 'Mocked text response',
+        status: 200,
+        ok: true,
       }) as Response,
   );
 
-  // Mock de `localStorage` et `sessionStorage`
+  // Mock `localStorage` and `sessionStorage` with basic operations
   const storageMock = {
     getItem: vi.fn().mockReturnValue('mockedValue'),
     setItem: vi.fn(),
     removeItem: vi.fn(),
+    clear: vi.fn(),
   };
   vi.stubGlobal('localStorage', storageMock);
   vi.stubGlobal('sessionStorage', storageMock);
 
-  // Variables d'environnement
+  // Set mock environment variables
   process.env.MY_ENV_VAR = 'mockedValue';
 
-  // DOM initialization
+  // Initialize DOM with a default structure
   document.body.innerHTML = '<div id="app">App Initialized</div>';
 
-  // Mock de `fs`
+  // Mock `fs` module for file system operations
   vi.mock('fs', async () => {
     const actual = await vi.importActual<typeof import('fs')>('fs');
     return {
       ...actual,
       existsSync: vi.fn().mockReturnValue(true),
       mkdirSync: vi.fn(),
+      writeFileSync: vi.fn(),
+      readFileSync: vi.fn().mockReturnValue('mocked file content'),
     };
   });
 });
 
 afterAll(() => {
+  // Restore all mocks to their original state
   vi.restoreAllMocks();
-  console.log('Après tous les tests : Nettoyage terminé');
 });

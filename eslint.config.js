@@ -5,15 +5,18 @@ import prettierPlugin from 'eslint-plugin-prettier';
 
 export default defineConfig([
   {
-    ignores: ['node_modules/**', 'dist/**', 'coverage/**'], // Ignorer certains dossiers
+    ignores: ['node_modules/**', 'dist/**', 'coverage/**', 'build/**', 'tests/mocks/**'], // Respect ignored folders
   },
   {
-    files: ['**/*.ts', '**/*.tsx', '**/*.test.ts', '**/*.test.tsx'], // Cibler les fichiers TypeScript et de test
+    files: ['**/*.ts', '**/*.tsx'], // Target all TypeScript files
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {
-        ecmaVersion: 2022,
+        ecmaVersion: 'latest', // Align with ESNext
         sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true, // Enable JSX parsing
+        },
       },
     },
     plugins: {
@@ -21,19 +24,29 @@ export default defineConfig([
       prettier: prettierPlugin,
     },
     rules: {
-      'prettier/prettier': 'warn', // Appliquer Prettier en mode avertissement
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'error', // Éviter l'utilisation de `any`
-      '@typescript-eslint/explicit-function-return-type': 'warn',
-      '@typescript-eslint/no-empty-function': 'warn',
-      'no-console': ['warn', { allow: ['warn', 'error'] }], // Autoriser `console.warn` et `console.error`
+      'prettier/prettier': 'warn', // Apply Prettier as a warning
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }], // Ignore unused vars starting with _
+      '@typescript-eslint/no-explicit-any': 'error', // Avoid `any` usage
+      '@typescript-eslint/explicit-function-return-type': ['warn', { allowExpressions: true }], // Enforce return types
+      '@typescript-eslint/no-empty-function': 'warn', // Warn against empty functions
+      'no-console': ['warn', { allow: ['warn', 'error'] }], // Allow specific console methods
+      'no-debugger': 'warn', // Warn against using debugger
+      'eqeqeq': ['error', 'always'], // Enforce strict equality
     },
   },
   {
-    // Override spécifique pour les fichiers de test pour permettre `console.log`
-    files: ['**/*.test.ts', '**/*.test.tsx'],
+    // Overrides specific to test files at the root
+    files: ['tests/**/*.test.ts', 'tests/**/*.test.tsx'], // Test files at the root
+    languageOptions: {
+      parser: typescriptParser,
+      parserOptions: {
+        ecmaVersion: 'latest', // Align with ESNext for tests
+        sourceType: 'module',
+      },
+    },
     rules: {
-      'no-console': 'off', // Désactiver la règle `no-console` pour les fichiers de test
+      'no-console': 'off', // Allow `console.log` in test files
+      '@typescript-eslint/no-empty-function': 'off', // Allow empty functions in test files
     },
   },
 ]);

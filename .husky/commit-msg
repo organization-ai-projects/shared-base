@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Validate commit message
+echo "📝 Validating commit message..."
+
+# Check if Commitlint is installed
+if ! command -v pnpm commitlint > /dev/null; then
+  echo "❌ Commitlint is not installed. Please install it with 'pnpm install @commitlint/cli'."
+  exit 1
+fi
+
+# Run Commitlint
+pnpm commitlint --edit "$1"
+
+# Check if validation passed
+if [ $? -ne 0 ]; then
+  echo "❌ Commit message validation failed. Please follow the commit conventions."
+  echo "🔗 See: https://www.conventionalcommits.org/"
+  echo "Example: feat(core): add new feature"
+  exit 1
+fi
+
+# Show validated message
+echo "📄 Commit message: $(cat $1)"
+echo "✅ Commit message validation passed."

@@ -1,23 +1,35 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Arrêt en cas d'erreur
+# Stop script on error
 set -e
 
-# Vérification de pnpm-lock.yaml
+# Check pnpm-lock.yaml
 echo "🔒 Checking pnpm-lock.yaml..."
 if ! pnpm install --frozen-lockfile --prefer-offline > /dev/null 2>&1; then
-  echo "❌ Lockfile check failed. Please update pnpm-lock.yaml."
+  echo "❌ Lockfile check failed. Please ensure pnpm-lock.yaml is up to date."
   exit 1
 fi
 
-# Lint complet
-echo "🔍 Full linting..."
-pnpm lint || exit 1
+# Full linting
+echo "🔍 Performing full linting..."
+if ! pnpm lint; then
+  echo "❌ Linting failed. Please fix the issues before pushing."
+  exit 1
+fi
 
-# Tests avec couverture
+# Run tests with coverage
 echo "🧪 Running tests with coverage..."
-pnpm test:coverage || exit 1
+if ! pnpm test:coverage; then
+  echo "❌ Tests failed or coverage did not meet the required threshold."
+  exit 1
+fi
 
-# Assurer que tout est stageé avant de pousser
-git diff --exit-code || exit 1
+# Ensure no uncommitted changes
+echo "📂 Checking for uncommitted changes..."
+if ! git diff --exit-code > /dev/null 2>&1; then
+  echo "❌ Uncommitted changes detected. Please commit your changes before pushing."
+  exit 1
+fi
+
+echo "✅ All checks passed. Ready to push!"

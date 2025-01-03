@@ -1,5 +1,30 @@
+# Ignore dependencies
 node_modules/
+
+# Build output directories
 dist/
+build/
+
+# Log files
 *.log
+
+# IDE configurations
 .vscode/
+.idea/
+*.iml
+
+# System files
 .DS_Store
+Thumbs.db
+
+# Test coverage and results
+coverage/
+test-results/
+
+# Temporary and cache files
+*.cache
+*.tmp
+
+# Project-specific configuration files
+*.config.js
+*.config.mjs

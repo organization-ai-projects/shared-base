@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔄 Running post-merge tasks..."
+if [ -f pnpm-lock.yaml ]; then
+  echo "📦 Installing dependencies..."
+  pnpm install --frozen-lockfile
+fi
+echo "✅ Post-merge tasks completed."

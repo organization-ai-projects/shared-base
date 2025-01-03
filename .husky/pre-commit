@@ -1,18 +1,21 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# Arrêt en cas d'erreur
+# Stop script on error
 set -e
 
-# Format et lint
-echo "🎨 Formatting..."
-pnpm format || exit 1
+# Format code
+echo "🎨 Formatting code..."
+pnpm format || { echo "❌ Formatting failed."; exit 1; }
 
-echo "🔍 Linting..."
-pnpm lint || exit 1
+# Lint code
+echo "🔍 Linting code..."
+pnpm lint || { echo "❌ Linting failed."; exit 1; }
 
-echo "🧪 Testing..."
-pnpm test || exit 1
+# Run tests
+echo "🧪 Running tests..."
+pnpm test || { echo "❌ Tests failed."; exit 1; }
 
-# Stage les fichiers modifiés
+# Stage any auto-fixed files
+echo "📂 Staging changes..."
 git add -A
