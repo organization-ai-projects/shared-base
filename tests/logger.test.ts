@@ -1,7 +1,7 @@
 import fs from 'fs';
-import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
-import winston, { Logger, LoggerOptions } from 'winston';
-import { WinstonLogger } from '../utils/logger';
+import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
+import winston, { Logger, type LoggerOptions } from 'winston';
+import { WinstonLogger } from '../src/utils/logger';
 
 vi.mock('fs', async () => {
   const actual = await vi.importActual<typeof fs>('fs');
@@ -60,21 +60,8 @@ describe('WinstonLogger', () => {
   });
 
   describe('Initialization', () => {
-    // it('should configure the logger with the correct settings', () => {
-    //   process.env.LOG_LEVEL = 'debug';
-
-    //   new WinstonLogger();
-
-    //   expect(mockCreateLogger).toHaveBeenCalledWith(
-    //     expect.objectContaining({
-    //       level: 'debug',
-    //       transports: expect.any(Array),
-    //     }),
-    //   );
-    // });
-
     it('should handle default log level', () => {
-      delete process.env.LOG_LEVEL;
+      delete process.env['LOG_LEVEL'];
 
       new WinstonLogger();
 
@@ -152,7 +139,7 @@ describe('WinstonLogger', () => {
 
     it('should handle circular references in objects', () => {
       const circular: Record<string, unknown> = {};
-      circular.self = circular;
+      circular['self'] = circular;
 
       logger.info(circular);
       expect(mockLoggerInstance.info).toHaveBeenCalledWith('[Circular Object]');
@@ -178,7 +165,7 @@ describe('WinstonLogger', () => {
 
     it('should handle errors without stack trace', () => {
       const error = new Error('Test error');
-      error.stack = undefined;
+      (error.stack as string | undefined) = undefined;
       logger.error(error);
       expect(mockLoggerInstance.error).toHaveBeenCalledWith('Test error');
     });

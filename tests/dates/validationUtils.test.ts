@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { isValidDate, isWeekend, isPublicHoliday } from '../../utils/dates/validationUtils';
+import { describe, expect, it } from 'vitest';
+import { isPublicHoliday, isValidDate, isWeekend } from '../../src/utils/dates/validationUtils';
 
 describe('Validation Utilities', () => {
   describe('isValidDate', () => {

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import { describe, expect, it, beforeAll, afterEach, afterAll } from 'vitest';
-import { useFetch } from '../../hooks/useFetch';
+import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { useFetch } from '../../src/hooks/useFetch';
 
 // Typage des réponses
 interface SuccessResponse {

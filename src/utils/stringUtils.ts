@@ -12,7 +12,7 @@ export function capitalize(str: string): string {
   if (!match) return str;
 
   const [, spaces, firstChar, rest] = match;
-  return spaces + firstChar.toUpperCase() + rest;
+  return spaces + (firstChar ? firstChar.toUpperCase() : '') + rest;
 }
 
 /**
@@ -47,5 +47,7 @@ export function slugify(text: string): string {
  * snakeToCamel('multiple__underscores___in____string') // 'multipleUnderscoresInString'
  */
 export function snakeToCamel(str: string): string {
-  return str.replace(/_+/g, '_').replace(/(_\w)/g, (matches) => matches[1].toUpperCase());
+  return str
+    .replace(/_+/g, '_')
+    .replace(/(_\w)/g, (matches) => (matches[1] ? matches[1].toUpperCase() : ''));
 }

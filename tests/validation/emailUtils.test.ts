@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { validateEmail } from '../../utils/validation/emailUtils';
+import { describe, expect, it } from 'vitest';
+import { validateEmail } from '../../src/utils/validation/emailUtils';
 
 describe('EmailUtils', () => {
   it('devrait valider les adresses email correctes', () => {

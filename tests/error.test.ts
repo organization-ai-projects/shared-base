@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { CustomError, handleError } from '../utils/error';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { CustomError, handleError } from '../src/utils/error';
 
 describe('CustomError', () => {
   it('devrait créer une erreur avec un code et un message', () => {

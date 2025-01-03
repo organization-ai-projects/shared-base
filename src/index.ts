@@ -3,7 +3,17 @@
 export * from './utils/arrayUtils';
 export * from './utils/dates/advancedDateUtils';
 export * from './utils/dates/dateUtils';
+export { dateDifference as dateDifferenceFromdifferenceUtils } from './utils/dates/differenceUtils';
+export { formatDate as formatDateFromformatUtils } from './utils/dates/formatUtils';
+export {
+  addDays as addDaysFrommanipulationUtils,
+  subtractDays as subtractDaysFrommanipulationUtils,
+} from './utils/dates/manipulationUtils';
 export * from './utils/dates/rangeUtils';
+export {
+  isValidDate as isValidDateFromvalidationUtils,
+  isWeekend as isWeekendFromvalidationUtils,
+} from './utils/dates/validationUtils';
 export * from './utils/envUtils';
 export * from './utils/error';
 export * from './utils/fileUtils';
@@ -14,13 +24,7 @@ export * from './utils/randomUtils';
 export * from './utils/stringUtils';
 export * from './utils/validation/emailUtils';
 export * from './utils/validation/uuidUtils';
-export { addDays as addDaysFrommanipulationUtils } from './utils/dates/manipulationUtils';
-export { dateDifference as dateDifferenceFromdifferenceUtils } from './utils/dates/differenceUtils';
-export { formatDate as formatDateFromformatUtils } from './utils/dates/formatUtils';
-export { isValidDate as isValidDateFromvalidationUtils } from './utils/dates/validationUtils';
-export { isWeekend as isWeekendFromvalidationUtils } from './utils/dates/validationUtils';
-export { subtractDays as subtractDaysFrommanipulationUtils } from './utils/dates/manipulationUtils';
 
 export * from './constants';
 
-export { DeepPartial as TypesDeepPartial } from './types';
+export type { DeepPartial as TypesDeepPartial } from './types';

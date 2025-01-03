@@ -1,6 +1,6 @@
 // Tests for randomUtils
-import { describe, it, expect } from 'vitest';
-import { randomString, generateRandomNumber, generateUUID } from '../utils/randomUtils';
+import { describe, expect, it } from 'vitest';
+import { generateRandomNumber, generateUUID, randomString } from '../src/utils/randomUtils';
 
 describe('randomUtils', () => {
   it('should generate a random string of specified length', () => {

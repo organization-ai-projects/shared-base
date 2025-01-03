@@ -1,4 +1,4 @@
-import { ILogger } from '../../utils/interfaces/ILogger';
+import type { ILogger } from '../../src/utils/interfaces/ILogger';
 
 export class MockLogger implements ILogger {
   logs: Record<'info' | 'error' | 'warn', string[]> = {

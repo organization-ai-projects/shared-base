@@ -1,6 +1,6 @@
-import { test, expect } from 'vitest';
-import { readFile, writeFile, deleteFile } from '../utils/fileUtils';
 import fs from 'fs';
+import { expect, test } from 'vitest';
+import { deleteFile, readFile, writeFile } from '../src/utils/fileUtils';
 
 test('should write, read, and delete a file', () => {
   const path = './test.txt';

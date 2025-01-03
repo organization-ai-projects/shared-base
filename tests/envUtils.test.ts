@@ -1,6 +1,6 @@
 // Tests for envUtils
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { getEnv, requireEnv } from '../utils/envUtils';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { getEnv, requireEnv } from '../src/utils/envUtils';
 
 describe('EnvUtils', () => {
   const originalEnv = process.env;
@@ -15,7 +15,7 @@ describe('EnvUtils', () => {
 
   describe('getEnv', () => {
     it("devrait retourner la valeur de la variable d'environnement", () => {
-      process.env.TEST_VAR = 'test-value';
+      process.env['TEST_VAR'] = 'test-value';
       expect(getEnv('TEST_VAR')).toBe('test-value');
     });
 
@@ -30,7 +30,7 @@ describe('EnvUtils', () => {
 
   describe('requireEnv', () => {
     it('devrait retourner la valeur si la variable existe', () => {
-      process.env.REQUIRED_VAR = 'required-value';
+      process.env['REQUIRED_VAR'] = 'required-value';
       expect(requireEnv('REQUIRED_VAR')).toBe('required-value');
     });
 
@@ -41,7 +41,7 @@ describe('EnvUtils', () => {
     });
 
     it('devrait lancer une erreur si la variable est vide', () => {
-      process.env.EMPTY_VAR = '';
+      process.env['EMPTY_VAR'] = '';
       expect(() => requireEnv('EMPTY_VAR')).toThrow(
         'Environment variable "EMPTY_VAR" is required but not defined.',
       );

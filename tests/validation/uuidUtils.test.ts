@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { validateUUID } from '../../utils/validation/uuidUtils';
+import { describe, expect, it } from 'vitest';
+import { validateUUID } from '../../src/utils/validation/uuidUtils';
 
 describe('UUIDUtils', () => {
   it('devrait valider les UUIDs corrects', () => {

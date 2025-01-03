@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { isDateInRange, generateDateRange } from '../../utils/dates/rangeUtils';
+import { describe, expect, it } from 'vitest';
+import { generateDateRange, isDateInRange } from '../../src/utils/dates/rangeUtils';
 
 describe('Range Utilities', () => {
   it('should check if a date is in range', () => {

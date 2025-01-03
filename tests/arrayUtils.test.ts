@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { removeDuplicates, shuffle, unique } from '../utils/arrayUtils';
+import { removeDuplicates, shuffle, unique } from '../src/utils/arrayUtils';
 
 describe('ArrayUtils', () => {
   describe('unique', () => {

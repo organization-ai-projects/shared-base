@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { capitalize, slugify, snakeToCamel } from '../utils/stringUtils';
+import { describe, expect, it } from 'vitest';
+import { capitalize, slugify, snakeToCamel } from '../src/utils/stringUtils';
 
 describe('StringUtils', () => {
   describe('capitalize', () => {

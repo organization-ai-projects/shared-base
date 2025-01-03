@@ -6,7 +6,7 @@ import {
   isValidDate,
   isWeekend,
   subtractDays,
-} from '../../utils/dates/advancedDateUtils';
+} from '../../src/utils/dates/advancedDateUtils';
 
 describe('Advanced Date Utilities', () => {
   it('should check if a date is a weekend', () => {

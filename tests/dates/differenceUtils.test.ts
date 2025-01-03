@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { dateDifference } from '../../utils/dates/differenceUtils';
+import { describe, expect, it } from 'vitest';
+import { dateDifference } from '../../src/utils/dates/differenceUtils';
 
 describe('DifferenceUtils', () => {
   it('devrait calculer la différence en jours', () => {

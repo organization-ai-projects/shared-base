@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatDate } from '../../utils/dates/dateUtils';
+import { describe, expect, it } from 'vitest';
+import { formatDate } from '../../src/utils/dates/dateUtils';
 
 describe('formatDate', () => {
   it("should format date in French when locale is 'fr-FR'", () => {

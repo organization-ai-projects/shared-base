@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, test, vi } from 'vitest';
-import { useDebounce } from '../../hooks/useDebounce';
+import { useDebounce } from '../../src/hooks/useDebounce';
 
 // Activer les timers simulés dans Vitest
 vi.useFakeTimers();

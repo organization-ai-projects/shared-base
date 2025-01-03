@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { deepClone, deepMerge, DeepPartial, mergeObjects } from '../utils/objectUtils';
+import { describe, expect, it } from 'vitest';
+import { deepClone, deepMerge, type DeepPartial, mergeObjects } from '../src/utils/objectUtils';
 
 describe('ObjectUtils', () => {
   describe('deepMerge', () => {
