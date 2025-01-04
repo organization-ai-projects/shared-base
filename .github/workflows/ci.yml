@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - develop
-      - 'feature/**'
       - 'feat/**'
       - 'fix/**'
       - 'hotfix/**'
@@ -16,37 +15,32 @@ on:
       - develop
 
 jobs:
-  build:
+  build-and-test:
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install pnpm
+      - name: Set up Node.js and pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9.15.2
 
-      - name: Set up Node.js and cache
+      - name: Set up Node.js and Cache
         uses: actions/setup-node@v3
         with:
           node-version: '22'
           cache: 'pnpm'
 
-      - name: Clear pnpm cache if needed
-        run: |
-          if pnpm store status; then
-            pnpm store prune
-          fi
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Format code
-        run: pnpm format
-
       - name: Lint code
         run: pnpm lint
+
+      - name: Format code
+        run: pnpm prettier --write .
 
       - name: Run tests
         run: pnpm test
@@ -62,7 +56,8 @@ jobs:
           name: codecov-umbrella
 
   release:
-    needs: build
+    name: Release
+    needs: build-and-test
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -75,16 +70,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install pnpm
+      - name: Set up Node.js and pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9.15.2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
