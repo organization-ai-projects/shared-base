@@ -28,7 +28,7 @@
     "lint": "eslint \"**/*.ts\" --fix",
     "type-check": "tsc --noEmit",
     "watch": "tsc --watch",
-    "prepare": "pnpm run build && husky install",
+    "prepare": "git config core.hooksPath .husky",
     "pack:check": "npm pack && tar -tf *.tgz",
     "check:outdated": "pnpm outdated",
     "format": "prettier --write .",
