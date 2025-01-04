@@ -1,6 +1,6 @@
 {
   "name": "@organization-ai-projects/shared-base",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A TypeScript-based utility library for simplifying and accelerating development.",
   "type": "module",
   "main": "./dist/index.js",

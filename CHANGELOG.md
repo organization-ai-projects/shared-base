@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/organization-ai-projects/shared-base/compare/v2.2.0...v2.3.0) (2025-01-04)
+
+
+### Features
+
+* **project:** modernize project structure and tooling ([6843c4f](https://github.com/organization-ai-projects/shared-base/commit/6843c4fcd184a150d01e6981887ae54bb92221b5))
+
 # [2.2.0](https://github.com/organization-ai-projects/shared-base/compare/v2.1.0...v2.2.0) (2025-01-02)
 
 
