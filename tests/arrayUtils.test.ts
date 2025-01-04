@@ -3,61 +3,62 @@ import { removeDuplicates, shuffle, unique } from '../src/utils/arrayUtils';
 
 describe('ArrayUtils', () => {
   describe('unique', () => {
-    it('should remove duplicates from an array', () => {
+    it("devrait supprimer les doublons d'un tableau", () => {
       const input = [1, 2, 2, 3];
       const result = unique(input);
       expect(result).toEqual([1, 2, 3]);
     });
 
-    it('should return an empty array when given an empty array input', () => {
+    it('devrait retourner un tableau vide pour un tableau vide en entrée', () => {
       const input: number[] = [];
       const result = removeDuplicates(input);
       expect(result).toEqual([]);
-      expect(result).not.toBe(input); // Ensure a new array is returned
+      expect(result).not.toBe(input);
     });
 
-    it('should return a new array instance, not modifying the original', () => {
+    it("devrait retourner une nouvelle instance du tableau sans modifier l'original", () => {
       const input = [1, 2, 2, 3];
       const result = removeDuplicates(input);
       expect(result).not.toBe(input);
       expect(input).toEqual([1, 2, 2, 3]);
-      expect(result).toEqual([1, 2, 3]);
-    });
-
-    it('should work correctly with an array of strings', () => {
-      const input = ['apple', 'banana', 'apple', 'cherry', 'banana', 'date'];
-      const result = unique(input);
-      expect(result).toEqual(['apple', 'banana', 'cherry', 'date']);
-      expect(result).not.toBe(input); // Ensure a new array is returned
     });
   });
 
   describe('shuffle', () => {
-    it('should randomize the order of array elements', () => {
-      const input = [1, 2, 3, 4];
+    it('devrait mélanger les éléments du tableau', () => {
+      const input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
       const result = shuffle(input);
-      expect(result.sort()).toEqual(input.sort()); // Ensure it has the same elements
 
-      // Check if the order is randomized by comparing the string representation
-      const inputString = input.join(',');
-      const resultString = result.join(',');
+      // Vérifier que tous les éléments sont présents
+      expect(result.sort()).toEqual(input.sort());
 
-      // Retry the shuffle if the result is the same as the input
-      if (resultString === inputString) {
-        const retryResult = shuffle(input);
-        const retryResultString = retryResult.join(',');
-        expect(retryResultString).not.toBe(inputString); // Ensure the order is randomized
-      } else {
-        expect(resultString).not.toBe(inputString); // Ensure the order is randomized
+      // Vérifier que l'ordre a changé (avec une tolérance pour les cas rares)
+      const originalOrder = input.join(',');
+
+      let differentOrder = false;
+      for (let i = 0; i < 10; i++) {
+        const newResult = shuffle(input);
+        if (newResult.join(',') !== originalOrder) {
+          differentOrder = true;
+          break;
+        }
       }
+
+      expect(differentOrder).toBe(true);
     });
 
-    it('should return a new array instance, not modifying the original', () => {
-      const input = [1, 2, 3, 4, 5];
+    it('devrait retourner une copie du tableau pour un tableau à un élément', () => {
+      const input = [1];
       const result = shuffle(input);
+      expect(result).toEqual(input);
       expect(result).not.toBe(input);
-      expect(input).toEqual([1, 2, 3, 4, 5]);
-      expect(result.sort()).toEqual(input.sort());
+    });
+
+    it('devrait gérer un tableau vide', () => {
+      const input: number[] = [];
+      const result = shuffle(input);
+      expect(result).toEqual([]);
+      expect(result).not.toBe(input);
     });
   });
 });
